@@ -31,3 +31,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Sample assets file
+/assets/detailImageSample.png
