@@ -1,0 +1,11 @@
+{
+  "main": {
+    "home": "Home",
+    "categories": "Categories",
+    "cart": "Cart",
+    "profile": "Profile"
+  },
+  "profile": {
+    "hello": "Hello"
+  }
+}
