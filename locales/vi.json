@@ -1,0 +1,11 @@
+{
+  "main": {
+    "home": "Trang chủ",
+    "categories": "Danh mục",
+    "cart": "Giỏ hàng",
+    "profile": "Hồ sơ"
+  },
+  "profile": {
+    "hello": "Xin Chào"
+  }
+}
