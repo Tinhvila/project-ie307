@@ -4,6 +4,7 @@ import { AuthenticationContext } from './context/context';
 import React from 'react';
 import BottomTabNavigationStack from './navigations/BottomTabNavigationStack';
 import AuthenticationStack from './navigations/AuthenticationStack';
+import ShoppingStack from './navigations/ShoppingStack';
 
 export default function App() {
   const {
@@ -18,7 +19,7 @@ export default function App() {
     <AuthenticationContext.Provider value={{ username, email, isAuthenticated, setUsername, setEmail, setIsAuthenticated }}>
       <NavigationContainer>
         {isAuthenticated ?
-          <BottomTabNavigationStack />
+          <ShoppingStack />
           :
           <AuthenticationStack />
         }

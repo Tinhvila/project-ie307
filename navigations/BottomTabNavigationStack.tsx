@@ -8,8 +8,9 @@ import Cart from '../screens/Cart';
 import Profile from '../screens/Profile';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { BottomTabNavigationStackParamList } from '../types/navigation';
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<BottomTabNavigationStackParamList>();
 
 export default function BottomTabNavigationStack() {
   const { t } = useTranslation();
