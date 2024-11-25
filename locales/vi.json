@@ -7,5 +7,14 @@
   },
   "profile": {
     "hello": "Xin Chào"
+  },
+  "item_detail": {
+    "buynow_button": "MUA NGAY",
+    "description": "Mô tả",
+    "delivery_option": {
+      "free_delivery": "Vận chuyển miễn phí",
+      "premium_delivery": "Vận chuyển nhanh",
+      "cost_delivery": "Vận chuyển tính phí"
+    }
   }
 }

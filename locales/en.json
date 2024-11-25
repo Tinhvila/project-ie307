@@ -7,5 +7,14 @@
   },
   "profile": {
     "hello": "Hello"
+  },
+  "item_detail": {
+    "buynow_button": "BUY NOW",
+    "description": "Description",
+    "delivery_option": {
+      "free_delivery": "Free delivery",
+      "premium_delivery": "Premium delivery",
+      "cost_delivery": "Charged delivery"
+    }
   }
 }
