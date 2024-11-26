@@ -1,6 +1,7 @@
 import { SafeAreaView, StyleSheet, Animated, Dimensions } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Video } from 'expo-av';
+import { ResizeMode } from '../types/resizeEnum.type';
 
 const { height } = Dimensions.get('window');
 
@@ -11,6 +12,7 @@ export default function Plash() {
   const [videoOpacity] = useState(new Animated.Value(0));
   const [finalImageAnimation] = useState(new Animated.Value(0));
   const [finalVideoAnimation] = useState(new Animated.Value(0));
+  type CustomResizeMode = 'cover' | 'contain' | 'stretch' | undefined;
 
   useEffect(() => {
     loadAndPlayVideo();
@@ -112,7 +114,7 @@ export default function Plash() {
           source={require('../assets/video/plash_screen.mp4')}
           shouldPlay={true}
           isLooping={true}
-          resizeMode="cover"
+          resizeMode={ResizeMode.COVER}
           onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
           isMuted={true}
         />
