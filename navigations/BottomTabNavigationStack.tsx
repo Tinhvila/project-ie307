@@ -9,6 +9,7 @@ import Profile from '../screens/Profile';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BottomTabNavigationStackParamList } from '../types/navigation';
+import HomeStackNavigation from './HomeStackNavigation';
 
 const Tab = createBottomTabNavigator<BottomTabNavigationStackParamList>();
 
@@ -16,10 +17,10 @@ export default function BottomTabNavigationStack() {
   const { t } = useTranslation();
 
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Tab.Navigator initialRouteName="HomeStack">
       <Tab.Screen
-        name="Home"
-        component={Home}
+        name="HomeStack"
+        component={HomeStackNavigation}
         options={{
           tabBarLabel: t('main.home'),
           tabBarIcon: ({ focused, color, size }) => (

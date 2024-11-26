@@ -1,34 +1,51 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { RouteProp } from "@react-navigation/native";
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationProp,
-} from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ItemProps } from "./types";
 
-// Typechecking the shopping stack navigator
+// Typechecking the shopping stack navigator - navigation stack
 export type ShoppingStackNavigator = {
   BottomScreen: BottomTabNavigationStackParamList;
   ItemDetails: ItemProps;
 };
 
-// Typechecking the bottom tab navigator
+// Typechecking the bottom tab navigator - tab stack
 export type BottomTabNavigationStackParamList = {
-  Home: undefined;
+  HomeStack: HomeStackNavigationParamList;
   Categories: undefined;
   Search: undefined;
   Cart: undefined;
   Profile: undefined;
 };
 
-// Type Navigation to Home Screen
+// Typechecking the HomeStackScreen - navigation stack
+export type HomeStackNavigationParamList = {
+  Home: undefined;
+  ItemsListScreen: {
+    title: string;
+    data?: ItemProps[];
+  };
+};
+
+// Type Navigation to Home Screen - navigation prop
 export type HomeNavigationProp = NativeStackNavigationProp<
   ShoppingStackNavigator,
   "ItemDetails"
 >;
 
-// Type Route to Item Detail Screen
+// Type Navigation from Home Screen to Items List Screen - navigation prop
+export type ItemsListScreenNavigationProp = NativeStackNavigationProp<
+  HomeStackNavigationParamList,
+  "ItemsListScreen"
+>;
+
+// Type Route to Item Detail Screen - route prop
 export type ItemDetailsScreenRouteProp = RouteProp<
   ShoppingStackNavigator,
   "ItemDetails"
+>;
+
+// Type Route to Item List Screen - route prop
+export type ItemsListScreenRouteProp = RouteProp<
+  HomeStackNavigationParamList,
+  "ItemsListScreen"
 >;

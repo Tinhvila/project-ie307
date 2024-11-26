@@ -1,8 +1,10 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
 import React from 'react';
 import StarList from './StarList';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+const width = Dimensions.get('window').width;
 
 const productData = {
   image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
@@ -21,7 +23,7 @@ const ProductItem: React.FC = () => {
   const [cart, setCart] = React.useState(false);
   return (
     <TouchableOpacity
-      className="w-[48%] bg-white rounded-sm shadow-sm mx-1 my-1"
+      className="w-[192px] bg-white rounded-sm shadow-sm mx-1 my-1"
       activeOpacity={0.7}
     >
       <Image
