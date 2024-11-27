@@ -7,7 +7,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 const width = Dimensions.get('window').width;
 
 const productData = {
-  image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
+  image:
+    'https://bizweb.dktcdn.net/thumb/large/100/467/909/products/mo-hinh-do-choi-moc-khoa-pop-mar-1.jpg?v=1722503506510',
   title: 'Classic Watch',
   description:
     'Comfortable and stylish everyday wear. Comfortable and stylish everyday wear. Comfortable and stylish everyday wear. Comfortable and stylish everyday wear.',
@@ -23,26 +24,22 @@ const ProductItem: React.FC = () => {
   const [cart, setCart] = React.useState(false);
   return (
     <TouchableOpacity
-      className="w-[192px] bg-white rounded-sm shadow-sm mx-1 my-1"
+      className=" bg-white rounded-sm shadow-sm mx-1 my-1 "
       activeOpacity={0.7}
     >
       <Image
         source={{ uri: productData.image }}
-        className="w-full rounded-t-sm h-32"
+        className="w-full rounded-t-sm aspect-square "
       />
       <View className="p-2">
         <Text
-          className="text-sm text-black font-semibold mb-1"
+          className="text-md text-black font-semibold mb-1"
           numberOfLines={1}
         >
           {productData.title}
         </Text>
 
-        <Text className="text-xs text-gray-500 mb-1" numberOfLines={2}>
-          {productData.description}
-        </Text>
-
-        <Text className="text-base font-bold text-black">
+        <Text className="text-xl font-bold text-black">
           ${productData.price}
         </Text>
 
@@ -60,13 +57,14 @@ const ProductItem: React.FC = () => {
         </View>
       </View>
       <TouchableOpacity
-        className="absolute left-0 top-0  rounded-full p-2"
+        className="absolute left-1 top-1  rounded-full p-2 bg-white"
         onPress={() => setFavorite((prev) => !prev)}
       >
         <FontAwesomeIcon
           name={favorite ? 'heart' : 'heart-o'}
           size={24}
           color={favorite ? 'red' : ''}
+          // className="bg-white"
         />
       </TouchableOpacity>
       <TouchableOpacity
