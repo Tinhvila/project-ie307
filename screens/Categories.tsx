@@ -17,14 +17,27 @@ export default function Categories() {
         contentContainerClassName="px-2"
       >
         <View className="flex-row flex-wrap justify-between">
-          <ProductItem />
-          <ProductItem />
-          <ProductItem />
-          <ProductItem />
-          <ProductItem />
-          <ProductItem />
-          <ProductItem />
-          <ProductItem />
+          <View className="w-[50%]">
+            <ProductItem />
+          </View>
+          <View className="w-[50%]">
+            <ProductItem />
+          </View>
+          <View className="w-[50%]">
+            <ProductItem />
+          </View>
+          <View className="w-[50%]">
+            <ProductItem />
+          </View>
+          <View className="w-[50%]">
+            <ProductItem />
+          </View>
+          <View className="w-[50%]">
+            <ProductItem />
+          </View>
+          <View className="w-[50%]">
+            <ProductItem />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

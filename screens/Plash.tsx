@@ -84,7 +84,7 @@ export default function Plash() {
   };
 
   return (
-    <SafeAreaView className="flex-1 mb-32 flex-col gap-5 items-center justify-center bg-white">
+    <SafeAreaView className="flex-1 pb-32 flex-col gap-5 items-center justify-center bg-white">
       <Animated.Image
         source={require('../assets/image/logo_4.png')}
         className="w-[150] h-[60]"
