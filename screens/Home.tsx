@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, TouchableOpacity, Image, Dimensions, ScrollVi
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
-import { HomeNavigationProp } from '../types/navigation';
+import { ItemDetailsNavigationProp } from '../types/navigation';
 import CustomCarousel from '../components/CustomCarousel';
 import ProductItem from '../components/ProductItem';
 import ListView from '../components/ListView';
@@ -31,7 +31,7 @@ const CarouselItem = ({ item }: { item: any }) => {
 
 export default function Home() {
   const { t } = useTranslation();
-  const navigation = useNavigation<HomeNavigationProp>();
+  const navigation = useNavigation<ItemDetailsNavigationProp>();
   return (
     <SafeAreaView className="flex flex-1">
       <Text className="text-xl font-bold text-black px-4 py-3">{t('main.home')}</Text>
@@ -51,13 +51,13 @@ export default function Home() {
       >
         <Text>Navigate to Item Details</Text>
       </TouchableOpacity> */}
-        <Text className={'text-xl font-bold text-orange-500 px-4 py-3'}>Check out our latest product!</Text>
+        <Text className={'text-2xl font-bold text-orange-500 px-4 py-3'}>Check out our latest product!</Text>
         <View className={'h-64'}>
           <CustomCarousel data={data} render={({ item }) => <CarouselItem item={item} />} />
         </View>
-        <ListView title={'Hot Deals'} data={[]} />
-        <ListView title={'Upcoming Event'} data={[]} />
-        <ListView title={'New Arrival'} data={[]} />
+        <ListView title={'Hot Deals 🔥'} data={[]} />
+        <ListView title={'Upcoming Event 🥇'} data={[]} />
+        <ListView title={'New Arrival 📦'} data={[]} />
       </ScrollView>
     </SafeAreaView>
   );

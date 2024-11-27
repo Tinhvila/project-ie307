@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native';
 import React, { JSXElementConstructor, ReactElement } from 'react'
 import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
@@ -65,13 +66,21 @@ export default function CustomCarousel(
     return () => clearTimeout(timeout);
   }, [index]);
 
+  // Reset the carousel state when the screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      // Reset the index when the screen comes into focus
+      setIndex(0);
+    }, [])
+  );
+
   // Optimize the slider
   const flatListOptimizationProps = {
-    initialNumToRender: 0,
+    initialNumToRender: 5,
     maxToRenderPerBatch: 1,
     removeClippedSubviews: true,
     scrollEventThrottle: 16,
-    windowSize: 2,
+    windowSize: 5,
     keyExtractor: React.useCallback((e: { id: any; }) => e.id, []),
     getItemLayout: React.useCallback(
       (_: any, index: number) => ({

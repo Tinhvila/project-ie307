@@ -26,13 +26,13 @@ export type HomeStackNavigationParamList = {
   };
 };
 
-// Type Navigation to Home Screen - navigation prop
-export type HomeNavigationProp = NativeStackNavigationProp<
+// Type Navigation from any Item Card to Item Details - navigation prop
+export type ItemDetailsNavigationProp = NativeStackNavigationProp<
   ShoppingStackNavigator,
   "ItemDetails"
 >;
 
-// Type Navigation from Home Screen to Items List Screen - navigation prop
+// Type Navigation from Any Item Card to to Items List Screen - navigation prop
 export type ItemsListScreenNavigationProp = NativeStackNavigationProp<
   HomeStackNavigationParamList,
   "ItemsListScreen"
