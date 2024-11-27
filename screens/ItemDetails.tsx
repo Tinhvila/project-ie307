@@ -1,10 +1,11 @@
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import StarList from '../components/StarList';
 import { ItemDetailsScreenRouteProp } from '../types/navigation';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 
 export default function ItemDetails({
@@ -14,13 +15,13 @@ export default function ItemDetails({
 }) {
   const { t } = useTranslation();
   const {
+    id,
     image,
     title,
     description,
     rating,
     initialPrice,
     discountPrice,
-    onAddToCart,
   } = route.params;
   const navigation = useNavigation();
   // Add or remove favorite item
@@ -48,6 +49,11 @@ export default function ItemDetails({
     }
   };
 
+  // Navigation Icon dominant color
+
+  const [dominantColor, setDominantColor] = React.useState(null);
+
+
   return (
     <ScrollView>
       <View>
@@ -57,10 +63,10 @@ export default function ItemDetails({
           className={'bg-contain w-full h-80'}
         />
         <TouchableOpacity
-          className={'absolute left-5 top-12'}
+          className={'absolute left-5 top-12 bg-white rounded-[100%]'}
           onPress={() => navigation.goBack()}
         >
-          <FontAwesomeIcon name={'arrow-circle-o-left'} size={32} />
+          <AntDesignIcon name={'left'} size={32} />
         </TouchableOpacity>
       </View>
       <View className={'m-5'}>
@@ -80,9 +86,8 @@ export default function ItemDetails({
         </View>
         <View className={'flex flex-row items-center'}>
           <Text
-            className={`font-bold text-2xl ${
-              discountPrice ? 'text-green-600' : 'text-black'
-            }`}
+            className={`font-bold text-2xl ${discountPrice ? 'text-green-600' : 'text-black'
+              }`}
           >
             ${' '}
             {discountPrice ? discountPrice.toFixed(2) : initialPrice.toFixed(2)}

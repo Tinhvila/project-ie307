@@ -3,32 +3,26 @@ import React from 'react';
 import StarList from './StarList';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ItemProps } from '../types/types';
+import { useNavigation } from '@react-navigation/native';
+import { ItemDetailsNavigationProp } from '../types/navigation';
 
-const width = Dimensions.get('window').width;
-
-const productData = {
-  image:
-    'https://bizweb.dktcdn.net/thumb/large/100/467/909/products/mo-hinh-do-choi-moc-khoa-pop-mar-1.jpg?v=1722503506510',
-  title: 'Classic Watch',
-  description:
-    'Comfortable and stylish everyday wear. Comfortable and stylish everyday wear. Comfortable and stylish everyday wear. Comfortable and stylish everyday wear.',
-  price: 50,
-  priceBeforeDeal: 75,
-  priceOff: '33% OFF',
-  stars: 1,
-  numberOfReview: 120,
-};
-
-const ProductItem: React.FC = () => {
+const ProductItem: React.FC<{ props: ItemProps }> = ({ props }) => {
   const [favorite, setFavorite] = React.useState(false);
   const [cart, setCart] = React.useState(false);
+  const navigation = useNavigation<ItemDetailsNavigationProp>();
   return (
     <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('ItemDetails', {
+          ...props
+        });
+      }}
       className=" bg-white rounded-sm shadow-sm mx-1 my-1 "
       activeOpacity={0.7}
     >
       <Image
-        source={{ uri: productData.image }}
+        source={{ uri: props.image }}
         className="w-full rounded-t-sm aspect-square "
       />
       <View className="p-2">
@@ -36,23 +30,23 @@ const ProductItem: React.FC = () => {
           className="text-md text-black font-semibold mb-1"
           numberOfLines={1}
         >
-          {productData.title}
+          {props.title}
         </Text>
 
         <Text className="text-xl font-bold text-black">
-          ${productData.price}
+          ${props.discountPrice ? props.discountPrice.toFixed(2) : props.initialPrice.toFixed(2)}
         </Text>
 
         <View className="flex-row items-center space-x-2 mb-1">
           <Text className="text-xs text-gray-400 line-through mr-1">
-            ${productData.priceBeforeDeal}
+            {props.discountPrice ? `\$${props.initialPrice.toFixed(2)}` : ''}
           </Text>
-          <Text className="text-xs text-red-500">{productData.priceOff}</Text>
+          <Text className="text-xs text-red-500">{props.discountPrice ? `${Math.round(100 - props.discountPrice / props.initialPrice * 100).toFixed(0)}% OFF` : ''}</Text>
         </View>
 
         <View className="flex-row items-center">
           <View className="flex-1">
-            <StarList rating={productData.stars} />
+            <StarList rating={props.rating ? props.rating : 0} />
           </View>
         </View>
       </View>
@@ -64,7 +58,7 @@ const ProductItem: React.FC = () => {
           name={favorite ? 'heart' : 'heart-o'}
           size={24}
           color={favorite ? 'red' : ''}
-          // className="bg-white"
+        // className="bg-white"
         />
       </TouchableOpacity>
       <TouchableOpacity
