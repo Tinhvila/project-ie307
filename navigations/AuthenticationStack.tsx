@@ -3,11 +3,18 @@ import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
+import Intro from '../screens/Intro';
+import { AuthenticationStackNavigationParamList } from '../types/navigation';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<AuthenticationStackNavigationParamList>();
 export default function AuthenticationStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName='Intro'>
+      <Stack.Screen
+        name={'Intro'}
+        component={Intro}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name={'Login'}
         component={Login}
