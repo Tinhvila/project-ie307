@@ -1,6 +1,6 @@
 import React, { SetStateAction } from "react";
 
-interface AuthenticationProp {
+export interface AuthenticationProp {
   username: string;
   email: string;
   isAuthenticated: boolean;
@@ -12,7 +12,7 @@ interface AuthenticationProp {
 export const AuthenticationContext = React.createContext<AuthenticationProp>({
   username: "",
   email: "",
-  isAuthenticated: true,
+  isAuthenticated: false,
   setUsername: () => {},
   setEmail: () => {},
   setIsAuthenticated: () => {},

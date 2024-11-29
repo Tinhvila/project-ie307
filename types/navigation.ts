@@ -26,6 +26,17 @@ export type HomeStackNavigationParamList = {
   };
 };
 
+// Typechecking the AuthenticationStackScreen - navigation stack
+export type AuthenticationStackNavigationParamList = {
+  Intro: undefined;
+  Login: undefined;
+  SignUp: undefined;
+};
+
+// Type Navigation for Authentication
+export type AuthenticationStackNavigationProp =
+  NativeStackNavigationProp<AuthenticationStackNavigationParamList>;
+
 // Type Navigation from any Item Card to Item Details - navigation prop
 export type ItemDetailsNavigationProp = NativeStackNavigationProp<
   ShoppingStackNavigator,
