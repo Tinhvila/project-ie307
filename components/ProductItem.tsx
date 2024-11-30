@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ItemProps } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { ItemDetailsNavigationProp } from '../types/navigation';
+import { formatPrice } from '../utils/formatPrice';
 
 const ProductItem: React.FC<{ props: ItemProps }> = ({ props }) => {
   const [favorite, setFavorite] = React.useState(false);
@@ -15,7 +16,7 @@ const ProductItem: React.FC<{ props: ItemProps }> = ({ props }) => {
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('ItemDetails', {
-          ...props
+          ...props,
         });
       }}
       className=" bg-white rounded-sm shadow-sm mx-1 my-1 "
@@ -26,22 +27,25 @@ const ProductItem: React.FC<{ props: ItemProps }> = ({ props }) => {
         className="w-full rounded-t-sm aspect-square "
       />
       <View className="p-2">
-        <Text
-          className="text-md text-black font-semibold mb-1"
-          numberOfLines={1}
-        >
+        <Text className="text-md line-clamp-1 text-black font-semibold mb-1">
           {props.title}
         </Text>
 
         <Text className="text-xl font-bold text-black">
-          ${props.discountPrice ? props.discountPrice.toFixed(2) : props.initialPrice.toFixed(2)}
+          {props.discountPrice && formatPrice(props.discountPrice)}
         </Text>
 
         <View className="flex-row items-center space-x-2 mb-1">
           <Text className="text-xs text-gray-400 line-through mr-1">
-            {props.discountPrice ? `\$${props.initialPrice.toFixed(2)}` : ''}
+            {props.discountPrice && formatPrice(props.initialPrice)}
           </Text>
-          <Text className="text-xs text-red-500">{props.discountPrice ? `${Math.round(100 - props.discountPrice / props.initialPrice * 100).toFixed(0)}% OFF` : ''}</Text>
+          <Text className="text-xs text-red-500">
+            {props.discountPrice
+              ? `${Math.round(
+                  100 - (props.discountPrice / props.initialPrice) * 100
+                ).toFixed(0)}% OFF`
+              : ''}
+          </Text>
         </View>
 
         <View className="flex-row items-center">
@@ -58,7 +62,6 @@ const ProductItem: React.FC<{ props: ItemProps }> = ({ props }) => {
           name={favorite ? 'heart' : 'heart-o'}
           size={24}
           color={favorite ? 'red' : ''}
-        // className="bg-white"
         />
       </TouchableOpacity>
       <TouchableOpacity

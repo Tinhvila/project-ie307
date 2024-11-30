@@ -1,4 +1,12 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
@@ -9,24 +17,31 @@ import ListView from '../components/ListView';
 
 const data = [
   { id: 1, image: 'https://i.imgur.com/CzXTtJV.jpg' },
-  { id: 2, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30' },
-  { id: 3, image: 'https://farm2.staticflickr.com/1533/26541536141_41abe98db3_z_d.jpg' },
-  { id: 4, image: 'https://farm4.staticflickr.com/3224/3081748027_0ee3d59fea_z_d.jpg' },
+  {
+    id: 2,
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
+  },
+  {
+    id: 3,
+    image: 'https://farm2.staticflickr.com/1533/26541536141_41abe98db3_z_d.jpg',
+  },
+  {
+    id: 4,
+    image: 'https://farm4.staticflickr.com/3224/3081748027_0ee3d59fea_z_d.jpg',
+  },
 ];
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
+const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
 const CarouselItem = ({ item }: { item: any }) => {
-
   return (
     <View>
       <Image
         source={{ uri: item.image }}
         style={{ width: windowWidth, height: 208 }}
       />
-    </View >
+    </View>
   );
-
 };
 
 export default function Home() {
@@ -34,7 +49,9 @@ export default function Home() {
   const navigation = useNavigation<ItemDetailsNavigationProp>();
   return (
     <SafeAreaView className="flex flex-1">
-      <Text className="text-xl font-bold text-black px-4 py-3">{t('main.home')}</Text>
+      <Text className="text-xl font-bold text-black px-2 py-3">
+        {t('main.home')}
+      </Text>
       <ScrollView>
         {/* <TouchableOpacity
         className={'p-3 border-black border-2 rounded-lg'}
@@ -51,9 +68,14 @@ export default function Home() {
       >
         <Text>Navigate to Item Details</Text>
       </TouchableOpacity> */}
-        <Text className={'text-2xl font-bold text-orange-500 px-4 py-3'}>Check out our latest product!</Text>
+        <Text className={'text-2xl font-bold text-orange-500 px-2 py-3'}>
+          Check out our latest product!
+        </Text>
         <View className={'h-64'}>
-          <CustomCarousel data={data} render={({ item }) => <CarouselItem item={item} />} />
+          <CustomCarousel
+            data={data}
+            render={({ item }) => <CarouselItem item={item} />}
+          />
         </View>
         <ListView title={'Hot Deals 🔥'} data={[]} />
         <ListView title={'Upcoming Event 🥇'} data={[]} />
