@@ -1,4 +1,11 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import StarList from '../components/StarList';
@@ -14,15 +21,8 @@ export default function ItemDetails({
   route: ItemDetailsScreenRouteProp;
 }) {
   const { t } = useTranslation();
-  const {
-    id,
-    image,
-    title,
-    description,
-    rating,
-    initialPrice,
-    discountPrice,
-  } = route.params;
+  const { id, image, title, description, rating, initialPrice, discountPrice } =
+    route.params;
   const navigation = useNavigation();
   // Add or remove favorite item
   const [favorite, setFavorite] = React.useState(false);
@@ -53,41 +53,43 @@ export default function ItemDetails({
 
   const [dominantColor, setDominantColor] = React.useState(null);
 
-
   return (
-    <ScrollView>
-      <View>
-        <Image
-          src={image}
-          alt={`Source: ${image}`}
-          className={'bg-contain w-full h-80'}
-        />
+    <ScrollView className="w-full ">
+      <View className="w-full ">
+        {image && (
+          <Image
+            src={image}
+            alt={`Source: ${image}`}
+            className={'bg-contain w-full aspect-square'}
+          />
+        )}
         <TouchableOpacity
-          className={'absolute left-5 top-12 bg-white rounded-[100%]'}
+          className={'absolute left-5 top-12 bg-white p-1 rounded-[100%]'}
           onPress={() => navigation.goBack()}
         >
-          <AntDesignIcon name={'left'} size={32} />
+          <AntDesignIcon name={'left'} size={20} />
         </TouchableOpacity>
       </View>
-      <View className={'m-5'}>
-        <View className={'flex-row justify-between items-center'}>
-          <View>
-            <Text className={'font-bold text-3xl'}>{title}</Text>
-          </View>
-          <View>
-            <TouchableOpacity onPress={() => setFavorite((prev) => !prev)}>
-              <FontAwesomeIcon
-                name={favorite ? 'heart' : 'heart-o'}
-                size={24}
-                color={favorite ? 'red' : ''}
-              />
-            </TouchableOpacity>
-          </View>
+      <View className={' w-full p-2 box-border flex-col gap-2'}>
+        <View className={'flex-row justify-between'}>
+          <Text className={'font-bold w-[90%] text-2xl'}>{title}</Text>
+
+          <TouchableOpacity
+            className="w-fit"
+            onPress={() => setFavorite((prev) => !prev)}
+          >
+            <FontAwesomeIcon
+              name={favorite ? 'heart' : 'heart-o'}
+              size={24}
+              color={favorite ? 'red' : ''}
+            />
+          </TouchableOpacity>
         </View>
         <View className={'flex flex-row items-center'}>
           <Text
-            className={`font-bold text-2xl ${discountPrice ? 'text-green-600' : 'text-black'
-              }`}
+            className={`font-bold text-2xl ${
+              discountPrice ? 'text-green-600' : 'text-black'
+            }`}
           >
             ${' '}
             {discountPrice ? discountPrice.toFixed(2) : initialPrice.toFixed(2)}
@@ -97,7 +99,7 @@ export default function ItemDetails({
               <Text className={'ml-2 line-through text-gray-500'}>
                 $ {initialPrice.toFixed(2)}
               </Text>
-              <Text className={'ml-2 color-white bg-red-500 p-2 rounded-xl'}>
+              <Text className={'ml-2 color-white bg-red-500 p-2 rounded-md'}>
                 {Math.round(100 - (discountPrice / initialPrice) * 100).toFixed(
                   0
                 )}
@@ -128,7 +130,7 @@ export default function ItemDetails({
                 color={countItem === 1 ? 'gray' : 'black'}
               />
             </TouchableOpacity>
-            <Text className={'mx-5 px-5 py-1 border-2 rounded-lg text-center'}>
+            <Text className={'mx-5 px-5 py-1 border-2 rounded-md text-center'}>
               {countItem}
             </Text>
             <TouchableOpacity
@@ -142,7 +144,7 @@ export default function ItemDetails({
         </View>
         <TouchableOpacity
           className={
-            'bg-black p-3 rounded-full items-center flex-row justify-center'
+            'bg-black p-3 rounded-sm items-center flex-row justify-center'
           }
         >
           <FontAwesome5Icon name="shopping-cart" size={24} color={'white'} />
@@ -158,7 +160,7 @@ export default function ItemDetails({
         </View>
         <View
           className={
-            'flex flex-row items-center justify-between bg-blue-200 p-3 my-3 rounded-full'
+            'flex flex-row items-center justify-between bg-blue-200 p-3 my-3 rounded-sm'
           }
         >
           <View className={'flex-row justifiy-center items-center'}>
