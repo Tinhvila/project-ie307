@@ -5,6 +5,8 @@ import { ItemProps } from "./types";
 // Typechecking the shopping stack navigator - navigation stack
 export type ShoppingStackNavigator = {
   BottomScreen: BottomTabNavigationStackParamList;
+  Search: undefined;
+  Profile: undefined;
   ItemDetails: ItemProps;
 };
 
@@ -22,7 +24,7 @@ export type HomeStackNavigationParamList = {
   Home: undefined;
   ItemsListScreen: {
     title: string;
-    data?: ItemProps[];
+    data: ItemProps[];
   };
 };
 

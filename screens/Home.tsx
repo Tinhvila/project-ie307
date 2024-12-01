@@ -6,30 +6,21 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  ActivityIndicator,
+  Pressable,
+  TextInput,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { ItemDetailsNavigationProp } from '../types/navigation';
 import CustomCarousel from '../components/CustomCarousel';
-import ProductItem from '../components/ProductItem';
 import ListView from '../components/ListView';
-
-const data = [
-  { id: 1, image: 'https://i.imgur.com/CzXTtJV.jpg' },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
-  },
-  {
-    id: 3,
-    image: 'https://farm2.staticflickr.com/1533/26541536141_41abe98db3_z_d.jpg',
-  },
-  {
-    id: 4,
-    image: 'https://farm4.staticflickr.com/3224/3081748027_0ee3d59fea_z_d.jpg',
-  },
-];
+import fetchProductData from '../api/fetchProductData';
+import { ItemProps } from '../types/types';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -47,40 +38,92 @@ const CarouselItem = ({ item }: { item: any }) => {
 export default function Home() {
   const { t } = useTranslation();
   const navigation = useNavigation<ItemDetailsNavigationProp>();
+  const [profilePress, setProfilePress] = React.useState<boolean>(false);
+  const [carouselData, setCarouselData] = React.useState<ItemProps[]>([]);
+  const [hotDealData, setHotDealData] = React.useState<ItemProps[]>([]);
+  const [eventData, setEventData] = React.useState<ItemProps[]>([]);
+  const [newArrivalData, setNewArrivalData] = React.useState<ItemProps[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const ITEMS_PER_CAROUSEL = 5;
+  const ITEMS_PER_LIST = 8;
+
+  React.useEffect(() => {
+    const fetchAllProduct = async () => {
+      try {
+        const { data } = await fetchProductData();
+        // Set some carousel data only
+        setCarouselData(data.filter(() => Math.random() > 0.5).slice(0, ITEMS_PER_CAROUSEL));
+        // Slice data to two categories: Hot Deals, New Arrival and Upcoming Event
+        // Hot Deals
+        setHotDealData(data.filter(item => item.isHotDeal));
+        // New Arrival
+        setNewArrivalData(data.filter(item => item.isNewProduct));
+        // Upcoming Event with random
+        setEventData(data.filter(() => Math.random() > 0.5));
+        setLoading(false);
+      }
+      catch (error) {
+        console.log('Error fetcing products:', error);
+        setLoading(false);
+      }
+    }
+
+    fetchAllProduct();
+  }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-50 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+      </SafeAreaView>
+    );
+  }
+
+
+
   return (
-    <SafeAreaView className="flex flex-1">
-      <Text className="text-xl font-bold text-black px-2 py-3">
-        {t('main.home')}
-      </Text>
-      <ScrollView>
-        {/* <TouchableOpacity
-        className={'p-3 border-black border-2 rounded-lg'}
-        onPress={() => {
-          navigation.navigate('ItemDetails', {
-            image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
-            title: 'Classic Watch',
-            description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-            rating: 3,
-            initialPrice: 399.99,
-            discountPrice: 299.99
-          });
-        }}
-      >
-        <Text>Navigate to Item Details</Text>
-      </TouchableOpacity> */}
-        <Text className={'text-2xl font-bold text-orange-500 px-2 py-3'}>
-          Check out our latest product!
-        </Text>
-        <View className={'h-64'}>
-          <CustomCarousel
-            data={data}
-            render={({ item }) => <CarouselItem item={item} />}
-          />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView className="flex-1">
+        {/* Home Section */}
+        <View className={'justify-between items-center flex-row'}>
+          <Text className="text-xl font-bold text-black px-2 py-3">
+            {t('main.home')}
+          </Text>
+          <Pressable
+            className={`mr-2 w-10 h-10 rounded-[100%] items-center justify-center ${profilePress ? 'bg-gray-500' : 'bg-gray-300'}`}
+            onPressIn={() => setProfilePress(true)}
+            onPressOut={() => setProfilePress(false)}
+            onPress={() => navigation.navigate('Profile')}
+          >
+            <Text className={'font-bold text-2xl'}>{'A'}</Text>
+          </Pressable>
         </View>
-        <ListView title={'Hot Deals 🔥'} data={[]} />
-        <ListView title={'Upcoming Event 🥇'} data={[]} />
-        <ListView title={'New Arrival 📦'} data={[]} />
-      </ScrollView>
-    </SafeAreaView>
+        {/* Search Section */}
+        <View className={'mx-2 my-4'}>
+          <AntDesignIcon name='search1' size={20} className={
+            'absolute top-2 left-4'
+          } />
+          <Text
+            className={'text-gray-400 border-gray-500 border-2 rounded-3xl pl-12 pr-4 py-2'}
+            onPress={() => navigation.navigate('Search')}
+          >Search item, product, categories...</Text>
+        </View>
+        {/* Item Section */}
+        <ScrollView className={'flex-1'}>
+          <Text className={'text-2xl font-bold text-orange-500 px-4 py-3'}>
+            Check out our latest product!
+          </Text>
+          <View className={'h-64'}>
+            <CustomCarousel
+              data={carouselData}
+              render={({ item }) => <CarouselItem item={item} />}
+            />
+          </View>
+          <ListView title={'Hot Deals 🔥'} data={hotDealData} limitDisplay={ITEMS_PER_LIST} />
+          <ListView title={'New Arrival 📦'} data={newArrivalData} limitDisplay={ITEMS_PER_LIST} />
+          <ListView title={'Upcoming Event 🥇'} data={eventData} limitDisplay={ITEMS_PER_LIST} />
+        </ScrollView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }

@@ -14,6 +14,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
+import { formatPrice } from '../utils/formatPrice';
 
 export default function ItemDetails({
   route,
@@ -87,17 +88,15 @@ export default function ItemDetails({
         </View>
         <View className={'flex flex-row items-center'}>
           <Text
-            className={`font-bold text-2xl ${
-              discountPrice ? 'text-green-600' : 'text-black'
-            }`}
+            className={`font-bold text-2xl ${discountPrice ? 'text-green-600' : 'text-black'
+              }`}
           >
-            ${' '}
-            {discountPrice ? discountPrice.toFixed(2) : initialPrice.toFixed(2)}
+            {discountPrice ? formatPrice(discountPrice) : formatPrice(initialPrice)}
           </Text>
           {discountPrice && (
             <>
               <Text className={'ml-2 line-through text-gray-500'}>
-                $ {initialPrice.toFixed(2)}
+                {formatPrice(initialPrice)}
               </Text>
               <Text className={'ml-2 color-white bg-red-500 p-2 rounded-md'}>
                 {Math.round(100 - (discountPrice / initialPrice) * 100).toFixed(

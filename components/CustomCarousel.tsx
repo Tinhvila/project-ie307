@@ -1,6 +1,7 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React, { JSXElementConstructor, ReactElement } from 'react'
 import { Dimensions, FlatList, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import { ItemProps } from '../types/types';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 
@@ -81,7 +82,7 @@ export default function CustomCarousel(
     removeClippedSubviews: true,
     scrollEventThrottle: 16,
     windowSize: 5,
-    keyExtractor: React.useCallback((e: { id: any; }) => e.id, []),
+    keyExtractor: React.useCallback((e: { id: string; }) => e.id, []),
     getItemLayout: React.useCallback(
       (_: any, index: number) => ({
         index,
