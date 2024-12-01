@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { HomeStackNavigationParamList, ItemDetailsScreenRouteProp, ItemsListScreenNavigationProp, ItemsListScreenRouteProp } from '../types/navigation';
 import { ItemProps } from '../types/types';
 
-const ListView = ({ title, data }: { title: string, data?: ItemProps[] }) => {
+const ListView = ({ title, data, limitDisplay }: { title: string, data: ItemProps[], limitDisplay?: number }) => {
   const navigation = useNavigation<ItemsListScreenNavigationProp>();
 
   return (
@@ -27,71 +27,43 @@ const ListView = ({ title, data }: { title: string, data?: ItemProps[] }) => {
         showsHorizontalScrollIndicator={false}
         className={'flex'}>
         <View className={'flex flex-row mx-4'}>
-          <View className={'w-52'}>
-            <ProductItem props={
-              {
-                id: '1',
-                image: 'https://bizweb.dktcdn.net/thumb/large/100/467/909/products/mo-hinh-do-choi-moc-khoa-pop-mar-1.jpg?v=1722503506510',
-                title: 'Classic Labubu',
-                description: 'Enhances your beauty with Labubu. Enhances your beauty with Labubu. Enhances your beauty with Labubu.',
-                initialPrice: 150,
-                discountPrice: 75,
-                rating: 3,
-              }
-            } />
-          </View>
-          <View className={'w-52'}>
-            <ProductItem props={
-              {
-                id: '1',
-                image: 'https://bizweb.dktcdn.net/thumb/large/100/467/909/products/mo-hinh-do-choi-moc-khoa-pop-mar-1.jpg?v=1722503506510',
-                title: 'Classic Labubu',
-                description: 'Enhances your beauty with Labubu. Enhances your beauty with Labubu. Enhances your beauty with Labubu.',
-                initialPrice: 150,
-                discountPrice: 75,
-                rating: 3,
-              }
-            } />
-          </View>
-          <View className={'w-52'}>
-            <ProductItem props={
-              {
-                id: '1',
-                image: 'https://bizweb.dktcdn.net/thumb/large/100/467/909/products/mo-hinh-do-choi-moc-khoa-pop-mar-1.jpg?v=1722503506510',
-                title: 'Classic Labubu',
-                description: 'Enhances your beauty with Labubu. Enhances your beauty with Labubu. Enhances your beauty with Labubu.',
-                initialPrice: 150,
-                discountPrice: 75,
-                rating: 3,
-              }
-            } />
-          </View>
-          <View className={'w-52'}>
-            <ProductItem props={
-              {
-                id: '1',
-                image: 'https://bizweb.dktcdn.net/thumb/large/100/467/909/products/mo-hinh-do-choi-moc-khoa-pop-mar-1.jpg?v=1722503506510',
-                title: 'Classic Labubu',
-                description: 'Enhances your beauty with Labubu. Enhances your beauty with Labubu. Enhances your beauty with Labubu.',
-                initialPrice: 150,
-                discountPrice: 75,
-                rating: 3,
-              }
-            } />
-          </View>
-          <View className={'w-52'}>
-            <ProductItem props={
-              {
-                id: '1',
-                image: 'https://bizweb.dktcdn.net/thumb/large/100/467/909/products/mo-hinh-do-choi-moc-khoa-pop-mar-1.jpg?v=1722503506510',
-                title: 'Classic Labubu',
-                description: 'Enhances your beauty with Labubu. Enhances your beauty with Labubu. Enhances your beauty with Labubu.',
-                initialPrice: 150,
-                discountPrice: 75,
-                rating: 3,
-              }
-            } />
-          </View>
+          {limitDisplay || (typeof limitDisplay === 'number' && limitDisplay > 0)
+            ? data.slice(0, limitDisplay).map((item, index, data) => {
+              return (
+                <View className={'w-52'} key={item.id}>
+                  <ProductItem props={
+                    {
+                      id: item.id,
+                      image: item.image,
+                      title: item.title,
+                      description: item.description,
+                      initialPrice: item.initialPrice,
+                      discountPrice: item.discountPrice,
+                      rating: item.rating,
+                    }
+                  } />
+                </View>
+              );
+            })
+            :
+            data.map((item, index, data) => {
+              return (
+                <View className={'w-52'} key={item.id}>
+                  <ProductItem props={
+                    {
+                      id: item.id,
+                      image: item.image,
+                      title: item.title,
+                      description: item.description,
+                      initialPrice: item.initialPrice,
+                      discountPrice: item.discountPrice,
+                      rating: item.rating,
+                    }
+                  } />
+                </View>
+              );
+            })
+          }
         </View>
       </ScrollView>
     </View>
