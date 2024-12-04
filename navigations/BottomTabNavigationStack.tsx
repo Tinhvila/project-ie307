@@ -63,7 +63,7 @@ export default function BottomTabNavigationStack() {
         }}
       />
       <Tab.Screen
-        name="Cart"
+        name={t('main.cart')}
         component={Cart}
         options={{
           tabBarLabel: t('main.cart'),
@@ -75,7 +75,7 @@ export default function BottomTabNavigationStack() {
             />
           ),
           tabBarBadge: 0,
-          headerShown: false,
+          headerShown: true,
         }}
       />
       <Tab.Screen

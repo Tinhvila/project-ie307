@@ -6,73 +6,29 @@ interface Total_Product {
 }
 
 const API = `http://192.168.2.7:3000/products`;
+// const API = `http://172.20.10.4:3000/products`;
 
 export default async function fetchProductData(
   params: {
-    searchContent?: string;
-    searchBrand?: string;
-    currentPage?: number;
-    productPerPage?: number;
-    sortBy?: string;
-    category?: string | null;
-    subCategory?: string | null;
-    ratingSelected?: number;
-    isFreeShipping?: boolean;
-    brandSelected?: string[];
-    minPrice?: number;
-    maxPrice?: number;
+    priceSort?: 'asc' | 'desc';
+    priceFilter?: number;
+    ratingFilter?: number;
   } = {}
 ): Promise<Total_Product> {
   try {
     const queryParams = new URLSearchParams();
 
-    if (params.currentPage) {
-      queryParams.append('_page', params.currentPage.toString());
+    if (params.priceSort) {
+      queryParams.append('_sort', 'discountPrice');
+      queryParams.append('_order', params.priceSort);
     }
 
-    if (params.productPerPage) {
-      queryParams.append('_limit', params.productPerPage.toString());
+    if (params.priceFilter) {
+      queryParams.append('discountPrice_gte', params.priceFilter.toString());
     }
 
-    if (params.minPrice !== undefined)
-      queryParams.append('price_gte', params.minPrice.toString());
-
-    if (params.maxPrice !== undefined)
-      queryParams.append('price_lte', params.maxPrice.toString());
-
-    if (params.searchContent) {
-      queryParams.append('name_like', params.searchContent);
-      queryParams.append('description_like', params.searchContent);
-    }
-
-    if (params.searchBrand) {
-      queryParams.append('brand', params.searchBrand);
-    }
-
-    if (params.category) {
-      queryParams.append('category', params.category);
-    }
-
-    if (params.subCategory) {
-      queryParams.append('subCategory', params.subCategory);
-    }
-
-    if (params.brandSelected && params.brandSelected.length) {
-      params.brandSelected.forEach((brand) =>
-        queryParams.append('brand', brand)
-      );
-    }
-
-    if (params.sortBy) {
-      queryParams.append('_sort', params.sortBy.split('_')[0]);
-      queryParams.append('_order', params.sortBy.split('_')[1]);
-    }
-    if (params.ratingSelected) {
-      queryParams.append('rating', params.ratingSelected.toString());
-    }
-
-    if (params.isFreeShipping) {
-      queryParams.append('free_shipping', params.isFreeShipping.toString());
+    if (params.ratingFilter) {
+      queryParams.append('rating_gte', params.ratingFilter.toString());
     }
 
     const apiUrl = `${API}?${queryParams.toString()}`;
@@ -83,9 +39,7 @@ export default async function fetchProductData(
     }
 
     const totalCount = response.headers.get('X-Total-Count');
-
     const total = totalCount ? parseInt(totalCount, 10) : null;
-
     const data: ItemProps[] = await response.json();
 
     return { data, totalCount: total };

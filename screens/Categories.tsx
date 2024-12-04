@@ -17,6 +17,10 @@ import { ItemProps } from '../types/types';
 import fetchProductData from '../api/fetchProductData';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Dropdown } from 'react-native-element-dropdown';
+import SkeletonLoader from '../components/SkeletonCategories';
+import Rating from '../components/Rating';
+import { RatingCount } from '../types/rating.type';
+import SliderPrice from '../components/SliderPrice';
 
 const brand = ['Pop Mart', 'The Monsters', 'Vinyl Toys', 'Collaborations'];
 const tag = ['Hot Deal', 'Upcoming Events', 'New Arrival'];
@@ -37,6 +41,10 @@ export default function Categories() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [priceSort, setPriceSort] = useState<string | null>('asc');
   const [isFocusPriceSort, setIsFocusPriceSort] = useState(false);
+  const [ratingNumber, setRatingNumber] = useState<RatingCount[]>([]);
+  const [ratingSelected, setRatingSelected] = useState<number[]>([]);
+  const [priceRange, setPriceRange] = useState<number[]>([5, 1300]);
+
   const ITEMS_PER_PAGE = 8;
 
   const filterBoxTranslation = useRef(
@@ -47,9 +55,13 @@ export default function Categories() {
     const fetchProducts = async () => {
       try {
         const { data } = await fetchProductData();
-        setAllData(data);
-        setDisplayedData(data.slice(0, ITEMS_PER_PAGE));
-        setLoading(false);
+        setTimeout(() => {
+          setAllData(data);
+          handleSetRatingNumber(data);
+          handleInitPriceRange(data);
+          setDisplayedData(data.slice(0, ITEMS_PER_PAGE));
+          setLoading(false);
+        }, 1000);
       } catch (error) {
         console.error('Error fetching products:', error);
         setLoading(false);
@@ -77,7 +89,7 @@ export default function Categories() {
     setTimeout(() => {
       setDisplayedData((prev) => [...prev, ...nextItems]);
       setLoading(false);
-    }, 500);
+    }, 1000);
   };
 
   const handleScroll = (event: any) => {
@@ -101,13 +113,51 @@ export default function Categories() {
   };
 
   if (loading && displayedData.length === 0) {
-    return (
-      <SafeAreaView className="flex-1 bg-gray-50 justify-center items-center">
-        <ActivityIndicator size="large" color="#0000ff" />
-      </SafeAreaView>
-    );
+    return <SkeletonLoader />;
   }
 
+  function handleSetRatingNumber(data: ItemProps[]): void {
+    const ratingList: any = [
+      { stars: 1, count: 0 },
+      { stars: 2, count: 0 },
+      { stars: 3, count: 0 },
+      { stars: 4, count: 0 },
+      { stars: 5, count: 0 },
+    ];
+
+    data.forEach((product) => {
+      const rating = product.rating;
+
+      if (rating >= 1 && rating <= 5) {
+        ratingList[rating - 1].count += 1;
+      }
+    });
+
+    setRatingNumber(ratingList);
+  }
+
+  function handleSetRatingSelected(rating: number): void {
+    setRatingSelected((current) =>
+      current.includes(rating)
+        ? current.filter((r) => r !== rating)
+        : [...current, rating]
+    );
+  }
+  function handleInitPriceRange(data: ItemProps[]): void {
+    const { minPrice, maxPrice } = data.reduce(
+      (acc, product) => ({
+        minPrice: Math.min(acc.minPrice, product.discountPrice),
+        maxPrice: Math.max(acc.maxPrice, product.discountPrice),
+      }),
+      { minPrice: Infinity, maxPrice: -Infinity }
+    );
+
+    setPriceRange([Math.floor(minPrice), Math.ceil(maxPrice)]);
+  }
+
+  function handleSetPriceRange(newValues: number[]): void {
+    setPriceRange(newValues);
+  }
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-row justify-between items-center overflow-x-hidden px-3 py-3">
@@ -153,7 +203,7 @@ export default function Categories() {
               <Icon name="close" color="black" size={24} />
             </TouchableOpacity>
           </View>
-          <ScrollView>
+          <View>
             <View className="px-3 border-b-gray-200 border-b mt-3">
               <Text className="text-normal font-medium mb-3">Brand</Text>
               <View className="flex flex-row flex-wrap gap-3 mb-3">
@@ -177,94 +227,24 @@ export default function Categories() {
               </View>
             </View>
             <View className="px-3 border-b-gray-200 border-b mt-3">
-              <Text className="text-normal font-medium mb-3">Brand</Text>
-              <View className="flex flex-row flex-wrap gap-3 mb-3">
-                {brand.map((item, index) => (
-                  <Pressable
-                    key={index}
-                    onPress={() =>
-                      setSelectedBrand(selectedBrand !== item ? item : null)
-                    }
-                    className={` rounded-sm  flex-row  justify-center items-center p-[9px] 
-                ${item === selectedBrand ? 'bg-black' : 'bg-gray-200'}`}
-                  >
-                    <Text
-                      className={`
-                  ${item === selectedBrand ? 'text-white' : 'text-black'}`}
-                    >
-                      {item}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
+              <Text className="text-normal font-medium mb-3">Price</Text>
+
+              <SliderPrice
+                data={allData}
+                priceRange={priceRange}
+                onSetPriceRange={handleSetPriceRange}
+              />
             </View>
             <View className="px-3 border-b-gray-200 border-b mt-3">
-              <Text className="text-normal font-medium mb-3">Brand</Text>
-              <View className="flex flex-row flex-wrap gap-3 mb-3">
-                {brand.map((item, index) => (
-                  <Pressable
-                    key={index}
-                    onPress={() =>
-                      setSelectedBrand(selectedBrand !== item ? item : null)
-                    }
-                    className={` rounded-sm  flex-row  justify-center items-center p-[9px] 
-                ${item === selectedBrand ? 'bg-black' : 'bg-gray-200'}`}
-                  >
-                    <Text
-                      className={`
-                  ${item === selectedBrand ? 'text-white' : 'text-black'}`}
-                    >
-                      {item}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
+              <Text className="text-normal font-medium mb-3">Rating</Text>
+
+              <Rating
+                ratingNumber={ratingNumber}
+                onSetRatingSelected={handleSetRatingSelected}
+                ratingSelected={ratingSelected}
+              />
             </View>
-            <View className="px-3 border-b-gray-200 border-b mt-3">
-              <Text className="text-normal font-medium mb-3">Brand</Text>
-              <View className="flex flex-row flex-wrap gap-3 mb-3">
-                {brand.map((item, index) => (
-                  <Pressable
-                    key={index}
-                    onPress={() =>
-                      setSelectedBrand(selectedBrand !== item ? item : null)
-                    }
-                    className={` rounded-sm  flex-row  justify-center items-center p-[9px] 
-                ${item === selectedBrand ? 'bg-black' : 'bg-gray-200'}`}
-                  >
-                    <Text
-                      className={`
-                  ${item === selectedBrand ? 'text-white' : 'text-black'}`}
-                    >
-                      {item}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-            <View className="px-3 border-b-gray-200 border-b mt-3">
-              <Text className="text-normal font-medium mb-3">Brand</Text>
-              <View className="flex flex-row flex-wrap gap-3 mb-3">
-                {brand.map((item, index) => (
-                  <Pressable
-                    key={index}
-                    onPress={() =>
-                      setSelectedBrand(selectedBrand !== item ? item : null)
-                    }
-                    className={` rounded-sm  flex-row  justify-center items-center p-[9px] 
-                ${item === selectedBrand ? 'bg-black' : 'bg-gray-200'}`}
-                  >
-                    <Text
-                      className={`
-                  ${item === selectedBrand ? 'text-white' : 'text-black'}`}
-                    >
-                      {item}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-          </ScrollView>
+          </View>
         </View>
       </Animated.View>
       <ScrollView

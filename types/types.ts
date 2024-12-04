@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React, { SetStateAction } from 'react';
 
 // Item details for item props
 export interface ItemProps {
@@ -6,9 +6,9 @@ export interface ItemProps {
   image?: string;
   title: string;
   description?: string;
-  rating?: number;
+  rating: number;
   initialPrice: number;
-  discountPrice?: number;
+  discountPrice: number;
   maxTotalItem?: number;
   brand?: string;
   category?: string;
