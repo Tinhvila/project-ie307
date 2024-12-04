@@ -50,7 +50,10 @@ const ProductItem: React.FC<{ props: ItemProps }> = ({ props }) => {
 
         <View className="flex-row items-center">
           <View className="flex-1">
-            <StarList rating={props.rating ? props.rating : 0} />
+            <StarList
+              rating={props.rating ? props.rating : 0}
+              className="w-3 h-3"
+            />
           </View>
         </View>
       </View>
