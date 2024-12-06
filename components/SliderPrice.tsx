@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { ItemProps } from '../types/types';
@@ -7,37 +7,48 @@ import { formatPrice } from '../utils/formatPrice';
 interface Props {
   data: ItemProps[];
   priceRange: number[];
-  onSetPriceRange: (values: number[]) => void;
+  handleSetPriceRange: (values: number[]) => void;
 }
 
 const PriceSlider: React.FC<Props> = ({
   data,
   priceRange,
-  onSetPriceRange,
+  handleSetPriceRange,
 }) => {
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(5000);
-  const [values, setValues] = useState<number[]>([minPrice, maxPrice]);
+  const { minPrice, maxPrice } =
+    data.length > 0
+      ? data.reduce(
+          (acc, product) => ({
+            minPrice: Math.min(acc.minPrice, product.discountPrice),
+            maxPrice: Math.max(acc.maxPrice, product.discountPrice),
+          }),
+          { minPrice: Infinity, maxPrice: -Infinity }
+        )
+      : { minPrice: 0, maxPrice: 5000 };
+
+  const min = minPrice;
+  const max = maxPrice;
+
+  const [values, setValues] = useState<number[]>([min, max]);
+  const [isSliding, setIsSliding] = useState(false);
+  const tempValues = useRef<number[]>([min, max]);
 
   useEffect(() => {
-    if (data.length > 0) {
-      const prices = data.map((product) => product.discountPrice);
-      setMinPrice(Math.floor(Math.min(...prices)));
-      setMaxPrice(Math.ceil(Math.max(...prices)));
-    }
-  }, [data]);
-
-  useEffect(() => {
-    setValues(priceRange.map((value) => Math.round(value)));
+    setValues(priceRange);
+    tempValues.current = priceRange;
   }, [priceRange]);
 
-  const handleValuesChange = (newValues: number[]) => {
+  const handleChange = (newValues: number[]) => {
     setValues(newValues);
+    tempValues.current = newValues;
+    setIsSliding(true);
   };
 
-  const handleValuesChangeFinish = (newValues: number[]) => {
-    setValues(newValues);
-    onSetPriceRange(newValues);
+  const handleValuesChangeFinish = () => {
+    if (isSliding) {
+      handleSetPriceRange(tempValues.current);
+      setIsSliding(false);
+    }
   };
 
   return (
@@ -53,15 +64,15 @@ const PriceSlider: React.FC<Props> = ({
       <View className="w-full items-center">
         <MultiSlider
           values={values}
-          min={minPrice}
-          max={maxPrice}
+          min={min}
+          max={max}
           step={1000}
-          onValuesChange={handleValuesChange}
+          onValuesChange={handleChange}
           onValuesChangeFinish={handleValuesChangeFinish}
           sliderLength={260}
           customMarker={() => (
             <View
-              className="w-6 h-6 bg-white border border-gray-300 rounded-full shadow-md"
+              className="w-8 h-8 bg-white border border-gray-300 rounded-full shadow-md"
               style={{
                 shadowColor: '#252c61',
                 shadowOpacity: 0.15,

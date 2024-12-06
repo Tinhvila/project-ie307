@@ -1,15 +1,15 @@
 import {
   View,
   Text,
-  ScrollView,
-  ActivityIndicator,
   TouchableOpacity,
   Dimensions,
   Animated,
   Pressable,
   StyleSheet,
+  FlatList,
+  Image,
 } from 'react-native';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import ProductItem from '../components/ProductItem';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -21,9 +21,15 @@ import SkeletonLoader from '../components/SkeletonCategories';
 import Rating from '../components/Rating';
 import { RatingCount } from '../types/rating.type';
 import SliderPrice from '../components/SliderPrice';
+import SkeletonProductGrid from '../components/SkeletonProductGrid';
 
 const brand = ['Pop Mart', 'The Monsters', 'Vinyl Toys', 'Collaborations'];
-const tag = ['Hot Deal', 'Upcoming Events', 'New Arrival'];
+
+const tag = [
+  { label: 'Hot Deal', value: 1 },
+  { label: 'Upcoming Events', value: 2 },
+  { label: 'New Arrival', value: 3 },
+];
 
 const priceLabel = [
   { label: 'Giá tăng dần', value: 'asc' },
@@ -32,20 +38,27 @@ const priceLabel = [
 
 export default function Categories() {
   const { t } = useTranslation();
-  const [allData, setAllData] = useState<ItemProps[]>([]);
-  const [displayedData, setDisplayedData] = useState<ItemProps[]>([]);
+  const [dataDisplay, setDataDisplay] = useState<ItemProps[]>([]);
+  const [data, setData] = useState<ItemProps[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasMoreData, setHasMoreData] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const [selectedBrand, setSelectedBrand] = useState<string | null>('Pop Mart');
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [priceSort, setPriceSort] = useState<string | null>('asc');
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [selectedTag, setSelectedTag] = useState<number | null>(null);
+  const [priceSort, setPriceSort] = useState<string | null>(null);
   const [isFocusPriceSort, setIsFocusPriceSort] = useState(false);
   const [ratingNumber, setRatingNumber] = useState<RatingCount[]>([]);
   const [ratingSelected, setRatingSelected] = useState<number[]>([]);
-  const [priceRange, setPriceRange] = useState<number[]>([5, 1300]);
+  const [priceRange, setPriceRange] = useState<number[]>([]);
 
-  const ITEMS_PER_PAGE = 8;
+  const [filteredProducts, setFilteredProducts] = useState<ItemProps[]>([]);
+  const [visibleProductCount, setVisibleProductCount] = useState(20);
+
+  const visibleProducts = useMemo(
+    () => filteredProducts.slice(0, visibleProductCount),
+    [filteredProducts, visibleProductCount]
+  );
 
   const filterBoxTranslation = useRef(
     new Animated.Value(Dimensions.get('window').width)
@@ -55,56 +68,52 @@ export default function Categories() {
     const fetchProducts = async () => {
       try {
         const { data } = await fetchProductData();
-        setTimeout(() => {
-          setAllData(data);
-          handleSetRatingNumber(data);
-          handleInitPriceRange(data);
-          setDisplayedData(data.slice(0, ITEMS_PER_PAGE));
-          setLoading(false);
-        }, 1000);
+        setDataDisplay(data);
+        setData(data);
+        handleSetRatingNumber(data);
+        handleInitPriceRange(data);
+        setIsFirstLoad(false);
       } catch (error) {
-        console.error('Error fetching products:', error);
-        setLoading(false);
+        setIsFirstLoad(false);
       }
     };
 
     fetchProducts();
   }, []);
 
-  const loadMoreItems = () => {
-    if (loading || !hasMoreData) return;
+  useEffect(() => {
+    const fetchProductsParams = async () => {
+      const params = {
+        brandSelected: selectedBrand || null,
+        priceSort: priceSort || null,
+        tag: selectedTag || null,
+        ratingFilter: ratingSelected,
+        minPrice: priceRange[0],
+        maxPrice: priceRange[1],
+      };
 
-    const currentLength = displayedData.length;
-    const nextItems = allData.slice(
-      currentLength,
-      currentLength + ITEMS_PER_PAGE
-    );
+      setIsFilterChanged(true);
 
-    if (nextItems.length === 0) {
-      setHasMoreData(false);
-      return;
-    }
+      try {
+        const { data } = await fetchProductData(params);
+        setTimeout(() => {
+          setDataDisplay(data);
+          setVisibleProductCount(10);
+          setFilteredProducts(data);
+          setLoading(false);
+          setIsFilterChanged(false);
+        }, 200);
+      } catch (error) {
+        setLoading(false);
+        setIsFilterChanged(false);
+      }
+    };
 
-    setLoading(true);
-    setTimeout(() => {
-      setDisplayedData((prev) => [...prev, ...nextItems]);
-      setLoading(false);
-    }, 1000);
-  };
-
-  const handleScroll = (event: any) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-
-    const isNearBottom =
-      layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
-
-    if (isNearBottom) {
-      loadMoreItems();
-    }
-  };
+    fetchProductsParams();
+  }, [selectedBrand, priceSort, selectedTag, ratingSelected, priceRange]);
 
   const toggleFilter = () => {
-    setIsFilterVisible(!isFilterVisible);
+    setIsFilterVisible((isFilterVisible) => !isFilterVisible);
     Animated.timing(filterBoxTranslation, {
       toValue: isFilterVisible ? Dimensions.get('window').width : 0,
       duration: 300,
@@ -112,8 +121,16 @@ export default function Categories() {
     }).start();
   };
 
-  if (loading && displayedData.length === 0) {
+  if (isFirstLoad) {
     return <SkeletonLoader />;
+  }
+
+  function resetFilter() {
+    setSelectedBrand(null);
+    setSelectedTag(null);
+    setRatingSelected([]);
+    setPriceSort(null);
+    handleInitPriceRange(data);
   }
 
   function handleSetRatingNumber(data: ItemProps[]): void {
@@ -151,8 +168,9 @@ export default function Categories() {
       }),
       { minPrice: Infinity, maxPrice: -Infinity }
     );
+    const newInitPriceRange = [Math.floor(minPrice), Math.ceil(maxPrice)];
 
-    setPriceRange([Math.floor(minPrice), Math.ceil(maxPrice)]);
+    setPriceRange(newInitPriceRange);
   }
 
   function handleSetPriceRange(newValues: number[]): void {
@@ -230,9 +248,9 @@ export default function Categories() {
               <Text className="text-normal font-medium mb-3">Price</Text>
 
               <SliderPrice
-                data={allData}
+                data={data}
                 priceRange={priceRange}
-                onSetPriceRange={handleSetPriceRange}
+                handleSetPriceRange={handleSetPriceRange}
               />
             </View>
             <View className="px-3 border-b-gray-200 border-b mt-3">
@@ -244,33 +262,47 @@ export default function Categories() {
                 ratingSelected={ratingSelected}
               />
             </View>
+
+            <View className="px-3 border-b-gray-200  mt-3">
+              <TouchableOpacity
+                onPress={resetFilter}
+                className={`mt-2 rounded-md border-2 border-black items-center
+           bg-black `}
+              >
+                <Text
+                  className={`px-4 py-2 text-base font-medium
+            text-white`}
+                >
+                  Reset filter
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Animated.View>
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        className="flex-row flex mb-2 px-3"
-      >
+
+      <View className="flex-row flex mb-2 px-3">
         <View className="flex flex-row gap-3 ">
           {tag.map((item, index) => (
             <Pressable
               key={index}
-              onPress={() => setSelectedTag(selectedTag !== item ? item : null)}
-              className={` rounded-sm  flex-row justify-center border border-gray-200 items-center px-3 py-2 
-                ${item === selectedTag ? 'bg-black' : 'bg-gray-50 '}`}
+              onPress={() =>
+                setSelectedTag(selectedTag !== item.value ? item.value : null)
+              }
+              className={` rounded-sm  flex-row justify-center border border-gray-200  items-center px-3 py-2 
+                ${item.value === selectedTag ? 'bg-black' : 'bg-gray-50 '}`}
             >
               <Text
-                className={`pb-2
-                  ${item === selectedTag ? 'text-white' : 'text-black'}`}
+                className={`  
+                  ${item.value === selectedTag ? 'text-white' : 'text-black'}`}
               >
-                {item}
+                {item.label}
               </Text>
             </Pressable>
           ))}
         </View>
-      </ScrollView>
-      <View className="px-3 flex-row justify-end">
+      </View>
+      <View className="px-3 flex-row justify-end mb-1">
         <Dropdown
           style={styles.dropdown}
           placeholderStyle={styles.placeholderStyle}
@@ -280,6 +312,7 @@ export default function Categories() {
           maxHeight={300}
           labelField="label"
           valueField="value"
+          placeholder="Sắp xếp theo giá"
           value={priceSort}
           onFocus={() => setIsFocusPriceSort(true)}
           onBlur={() => setIsFocusPriceSort(false)}
@@ -289,32 +322,51 @@ export default function Categories() {
           }}
         />
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName="px-2"
-        onScroll={handleScroll}
-        scrollEventThrottle={400}
-      >
-        <View className="flex-row flex-wrap justify-between">
-          {displayedData.map((item, index) => (
-            <View className="w-[50%]" key={index}>
+
+      {isFilterChanged ? (
+        <SkeletonProductGrid />
+      ) : visibleProducts.length ? (
+        <FlatList
+          data={visibleProducts}
+          numColumns={2}
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          windowSize={21}
+          renderItem={({ item }) => (
+            <View className="w-[50%]">
               <ProductItem props={item} />
             </View>
-          ))}
-
-          {loading && (
-            <View className="w-full items-center py-4">
-              <ActivityIndicator size="small" color="#0000ff" />
-            </View>
           )}
-
-          {!hasMoreData && (
-            <View className="w-full items-center py-4">
-              <Text className="text-gray-500">No more items to load</Text>
-            </View>
-          )}
+          onEndReached={() => {
+            if (visibleProductCount < filteredProducts.length) {
+              setVisibleProductCount((prev) =>
+                Math.min(prev + 10, filteredProducts.length)
+              );
+            }
+          }}
+        />
+      ) : (
+        <View className=" flex flex-col justify-start items-center ">
+          <Image
+            source={require('../assets/image/8062127.webp')}
+            className="w-48 h-48"
+          />
+          <View className="px-3 border-b-gray-200 w-[50%]  mt-3">
+            <TouchableOpacity
+              onPress={resetFilter}
+              className={`mt-2 rounded-md border-2 border-black items-center
+           bg-black `}
+            >
+              <Text
+                className={`px-4 py-2 text-base font-medium
+            text-white`}
+              >
+                Reset filter
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
