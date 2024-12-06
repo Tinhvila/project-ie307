@@ -2,19 +2,21 @@ import json
 import random
 
 # Đọc dữ liệu từ file data.json
-with open('data.json', 'r', encoding='utf-8') as json_file:
-    data = json.load(json_file)
+with open('data.json', 'r', encoding='utf-8') as file:
+    data = json.load(file)
 
-# Đọc các brand từ file brand.txt
-with open('brand.txt', 'r', encoding='utf-8') as brand_file:
-    brands = [line.strip() for line in brand_file.readlines()]
+# Thêm trường isUpcomingEvent với giá trị True cho 5 sản phẩm ngẫu nhiên
+products = data.get("products", [])
+print(products)
+random.shuffle(products)  # Xáo trộn danh sách sản phẩm
+for i, product in enumerate(products):
+    product["isUpcomingEvent"] = True if i % 5 == 0 and i != 0 else False
+    # Xóa đi trường category và subCategory
+    product.pop("category", None)
+    product.pop("subCategory", None)
 
-# Loop qua mỗi sản phẩm trong 'products' và gán ngẫu nhiên một brand
-for product in data["products"]:
-    product["brand"] = random.choice(brands)
+# Ghi lại dữ liệu vào file data.json
+with open('data.json', 'w', encoding='utf-8') as file:
+    json.dump(data, file, ensure_ascii=False, indent=4)
 
-# Lưu lại kết quả vào file data.json
-with open('data.json', 'w', encoding='utf-8') as json_file:
-    json.dump(data, json_file, indent=4, ensure_ascii=False)
-
-print("Đã thêm brand ngẫu nhiên vào các sản phẩm và lưu vào data.json!")
+print("Đã cập nhật file data.json thành công.!!")
