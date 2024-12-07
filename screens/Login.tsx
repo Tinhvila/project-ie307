@@ -6,6 +6,8 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 import { AuthenticationStackNavigationProp } from '../types/navigation';
 import { AuthenticationContext } from '../context/context';
+import fetchUser from '../api/fetchUser';
+import { comparePassword } from '../utils/hashPassword';
 
 export default function Login() {
   const navigation = useNavigation<AuthenticationStackNavigationProp>();
@@ -21,14 +23,33 @@ export default function Login() {
     setIsAuthenticated,
   } = React.useContext(AuthenticationContext);
   // Handle the login state with JSON server later
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Check if the field is empty
     if (loginAuthen.email === '' || loginAuthen.password === '') {
       Alert.alert('Detected empty field', 'Please fill all login field');
       return;
     }
 
-    // Validate to JSON server here
+    // Get data from json server
+    const param = { email: loginAuthen.email };
+    const checkData = await fetchUser(param);
+
+    // If authentication is invalid, return an error for user to retype again
+    if (!checkData || checkData.length === 0) {
+      Alert.alert('Invalid email or password', 'Please try again!');
+      return;
+    }
+
+    const match = await comparePassword(loginAuthen.password, checkData[0].password)
+    if (!match) {
+      Alert.alert('Invalid email or password', 'Please try again!');
+      return;
+    }
+
+    // If authentication is valid, allows the user to sign in
+    Alert.alert("Login successfully", "You have logged in successfully.");
+    setUsername(checkData[0].username);
+    setEmail(checkData[0].email);
     setIsAuthenticated(true);
   };
 
@@ -78,7 +99,7 @@ export default function Login() {
                 onPress={() => setRevealPassword((prev) => !prev)}
               />
             </View>
-            <TouchableOpacity onPress={handleLogin}>
+            <TouchableOpacity>
               <Text className={'text-right w-80 mt-2 text-blue-500'}>Forgot password?</Text>
             </TouchableOpacity>
             <TouchableOpacity

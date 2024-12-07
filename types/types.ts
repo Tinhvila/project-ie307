@@ -6,9 +6,9 @@ export interface ItemProps {
   image?: string;
   title: string;
   description?: string;
-  rating?: number;
+  rating: number;
   initialPrice: number;
-  discountPrice?: number;
+  discountPrice: number;
   maxTotalItem?: number;
   brand?: string;
   category?: string;
@@ -40,4 +40,5 @@ export interface UserProps {
   favorite?: [
     id: string //Id from ItemProps
   ];
+  searchHistory?: [];
 }

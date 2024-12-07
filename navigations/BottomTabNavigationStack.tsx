@@ -9,6 +9,7 @@ import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BottomTabNavigationStackParamList } from '../types/navigation';
 import HomeStackNavigation from './HomeStackNavigation';
+import ProfileStackNavigation from './ProfileStackNavigation';
 
 const Tab = createBottomTabNavigator<BottomTabNavigationStackParamList>();
 
@@ -63,7 +64,7 @@ export default function BottomTabNavigationStack() {
         }}
       />
       <Tab.Screen
-        name="Cart"
+        name='Cart'
         component={Cart}
         options={{
           tabBarLabel: t('main.cart'),
@@ -75,12 +76,12 @@ export default function BottomTabNavigationStack() {
             />
           ),
           tabBarBadge: 0,
-          headerShown: false,
+          headerShown: true,
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="ProfileStack"
+        component={ProfileStackNavigation}
         options={{
           tabBarLabel: t('main.profile'),
           tabBarIcon: ({ focused, color, size }) => (

@@ -6,7 +6,7 @@ import { ItemProps } from "./types";
 export type ShoppingStackNavigator = {
   BottomScreen: BottomTabNavigationStackParamList;
   Search: undefined;
-  Profile: undefined;
+  ProfileStack: undefined;
   ItemDetails: ItemProps;
 };
 
@@ -16,7 +16,7 @@ export type BottomTabNavigationStackParamList = {
   Categories: undefined;
   Search: undefined;
   Cart: undefined;
-  Profile: undefined;
+  ProfileStack: undefined;
 };
 
 // Typechecking the HomeStackScreen - navigation stack
@@ -26,6 +26,13 @@ export type HomeStackNavigationParamList = {
     title: string;
     data: ItemProps[];
   };
+};
+
+// Typechecking the Profile - navigation stack
+export type ProfileStackNavigationParamList = {
+  Profile: undefined;
+  Order: undefined;
+  Setting: undefined;
 };
 
 // Typechecking the AuthenticationStackScreen - navigation stack
@@ -38,6 +45,10 @@ export type AuthenticationStackNavigationParamList = {
 // Type Navigation for Authentication
 export type AuthenticationStackNavigationProp =
   NativeStackNavigationProp<AuthenticationStackNavigationParamList>;
+
+// Type Navigation for Profile
+export type ProfileStackNavigationProp =
+  NativeStackNavigationProp<ProfileStackNavigationParamList>;
 
 // Type Navigation from any Item Card to Item Details - navigation prop
 export type ItemDetailsNavigationProp = NativeStackNavigationProp<
