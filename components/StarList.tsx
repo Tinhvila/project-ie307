@@ -19,12 +19,12 @@ export default function StarList({ className, rating }: Props): JSX.Element {
               ? require('../assets/image/star.png')
               : require('../assets/image/star-empty.png')
           }
-          className="h-3 w-3 mr-1"
-          style={{
-            width: 12,
-            height: 12,
-            marginRight: 4,
-          }}
+          className="h-full w-full mr-1"
+          // style={{
+          //   width: 12,
+          //   height: 12,
+          //   marginRight: 4,
+          // }}
         />
       ))}
     </View>

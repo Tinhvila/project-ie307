@@ -12,7 +12,6 @@ export default function Plash() {
   const [videoOpacity] = useState(new Animated.Value(0));
   const [finalImageAnimation] = useState(new Animated.Value(0));
   const [finalVideoAnimation] = useState(new Animated.Value(0));
-  type CustomResizeMode = 'cover' | 'contain' | 'stretch' | undefined;
 
   useEffect(() => {
     loadAndPlayVideo();

@@ -16,7 +16,7 @@ export default function Profile() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-  }
+  };
 
   return (
     <View className="flex flex-1 justify-center items-center bg-white">
@@ -36,8 +36,10 @@ export default function Profile() {
           Change language
         </Text>
       </Pressable>
-      <Pressable onPress={handleLogout}
-        className={`mt-2 rounded-md border-2 border-black`}>
+      <Pressable
+        onPress={handleLogout}
+        className={`mt-2 rounded-md border-2 border-black`}
+      >
         <Text
           className={`px-4 py-2 text-base font-medium
             ${isPressed ? 'text-white' : 'text-black'}`}
