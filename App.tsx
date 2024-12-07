@@ -40,8 +40,8 @@ export default function App() {
       }}
     >
       <NavigationContainer>
-        <ShoppingStack />
-        {/* {isAuthenticated ? <ShoppingStack /> : <AuthenticationStack />} */}
+        {/* <ShoppingStack /> */}
+        {isAuthenticated ? <ShoppingStack /> : <AuthenticationStack />}
       </NavigationContainer>
     </AuthenticationContext.Provider>
   );
