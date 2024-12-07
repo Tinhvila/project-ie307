@@ -40,4 +40,5 @@ export interface UserProps {
   favorite?: [
     id: string //Id from ItemProps
   ];
+  searchHistory?: [];
 }
