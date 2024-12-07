@@ -6,6 +6,10 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 import { AuthenticationStackNavigationProp } from '../types/navigation';
 import { AuthenticationContext } from '../context/context';
+import fetchUser, { postUser } from '../api/fetchUser';
+import * as Yup from 'yup';
+import { hashPassword } from '../utils/hashPassword';
+
 
 export default function SignUp() {
   const navigation = useNavigation<AuthenticationStackNavigationProp>();
@@ -27,7 +31,7 @@ export default function SignUp() {
     setEmail,
     setIsAuthenticated
   } = React.useContext(AuthenticationContext);
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     // Handle empty field
     if (signUpAuthen.username === ''
       || signUpAuthen.email === ''
@@ -37,15 +41,64 @@ export default function SignUp() {
       return;
     }
 
+    // Check if the email is valid or not
+    const emailSchema = Yup.string().email('Invalid email format');
+    const validateEmail = async () => {
+      try {
+        // Attempt to validate the email
+        await emailSchema.validate(signUpAuthen.email);
+        // If validation passes, set validEmail to true
+        return true;
+      } catch (error) {
+        console.log('Error while validating email: ', error);
+        // If validation fails, return false
+        return false;
+      }
+    };
+
+    const validEmail = await validateEmail();
+    if (!validEmail) {
+      Alert.alert('Email does not exist, please try again');
+      return;
+    }
+
+
     // Handle valid password and retype password
     if (signUpAuthen.password !== signUpAuthen.retypePassword) {
       Alert.alert("Password mismatch", 'Please enter password in Password and Confirm Password field correctly.');
       return;
     }
 
-    // Call the JSON server to validate here later
+    const params = { email: signUpAuthen.email };
+    // Call the JSON server to validate
+    // Check whether the user exists
+    const checkData = await fetchUser(params);
+    if (checkData) //Data already exists
+    {
+      Alert.alert("Email existed", "Please choose another email or sign in with this email.");
+      return;
+    }
 
+    const hashedPassword = await hashPassword(signUpAuthen.password);
+    // If data does not exist, add into the json database
     // If validate successfully, direct the user to Home
+    const result = await postUser({
+      username: signUpAuthen.username,
+      email: signUpAuthen.email,
+      password: hashedPassword,
+      cart: [],
+      order: [],
+      favorite: [],
+      searchHistory: [],
+    });
+    if (result) {
+      Alert.alert("Sign up successfully", "Congratulations, you have signed up successfully.");
+      setUsername(signUpAuthen.username);
+      setEmail(signUpAuthen.email);
+      setIsAuthenticated(true);
+    } else {
+      console.error("Error while inserting data.");
+    }
   };
 
   return (

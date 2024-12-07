@@ -21,6 +21,7 @@ import ListView from '../components/ListView';
 import fetchProductData from '../api/fetchProductData';
 import { ItemProps } from '../types/types';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import { AuthenticationContext } from '../context/context';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -37,6 +38,7 @@ const CarouselItem = ({ item }: { item: any }) => {
 
 export default function Home() {
   const { t } = useTranslation();
+  const { username } = React.useContext(AuthenticationContext);
   const navigation = useNavigation<ItemDetailsNavigationProp>();
   const [profilePress, setProfilePress] = React.useState<boolean>(false);
   const [carouselData, setCarouselData] = React.useState<ItemProps[]>([]);
@@ -93,9 +95,9 @@ export default function Home() {
             className={`mr-2 w-10 h-10 rounded-[100%] items-center justify-center ${profilePress ? 'bg-gray-500' : 'bg-gray-300'}`}
             onPressIn={() => setProfilePress(true)}
             onPressOut={() => setProfilePress(false)}
-            onPress={() => navigation.navigate('Profile')}
+            onPress={() => navigation.navigate('ProfileStack')}
           >
-            <Text className={'font-bold text-2xl'}>{'A'}</Text>
+            <Text className={'font-bold text-2xl'}>{username.at(0)?.toUpperCase()}</Text>
           </Pressable>
         </View>
         {/* Search Section */}
