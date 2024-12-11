@@ -32,7 +32,7 @@ export type HomeStackNavigationParamList = {
 export type ProfileStackNavigationParamList = {
   Profile: undefined;
   Order: undefined;
-  Setting: undefined;
+  EditProfile: undefined;
 };
 
 // Typechecking the AuthenticationStackScreen - navigation stack

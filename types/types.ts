@@ -1,4 +1,4 @@
-import React, { SetStateAction } from 'react';
+import React, { SetStateAction } from "react";
 
 // Item details for item props
 export interface ItemProps {
@@ -20,8 +20,12 @@ export interface ItemProps {
 export interface UserProps {
   id: string;
   username: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  address: string;
+  phoneNumber: string;
   cart?: [
     {
       id: string; //Id from ItemProps

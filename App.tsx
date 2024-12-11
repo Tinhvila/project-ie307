@@ -7,10 +7,17 @@ import ShoppingStack from './navigations/ShoppingStack';
 import Plash from './screens/Plash';
 
 export default function App() {
-  const [username, setUsername] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const [id, setId] = React.useState('');
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const [userData, setUserData] = React.useState({
+    username: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    address: ''
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -31,12 +38,12 @@ export default function App() {
   return (
     <AuthenticationContext.Provider
       value={{
-        username,
-        email,
+        id,
+        userData,
         isAuthenticated,
-        setUsername,
-        setEmail,
         setIsAuthenticated,
+        setId,
+        setUserData,
       }}
     >
       <NavigationContainer>

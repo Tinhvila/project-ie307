@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../utils/i18n.config';
@@ -11,7 +11,8 @@ import { ProfileStackNavigationProp } from '../types/navigation';
 
 export default function Profile() {
   const { t } = useTranslation();
-  const { username, email, setUsername, setEmail, setIsAuthenticated } = React.useContext(AuthenticationContext);
+  const { setIsAuthenticated, setId } = React.useContext(AuthenticationContext);
+  const { userData } = React.useContext(AuthenticationContext);
   const navigation = useNavigation<ProfileStackNavigationProp>();
   const changeLanguage = () => {
     const newLanguage = i18n.language === 'en' ? 'vi' : 'en';
@@ -19,20 +20,35 @@ export default function Profile() {
   };
 
   const handleLogout = () => {
-    setUsername('');
-    setEmail('');
+    setId('');
     setIsAuthenticated(false);
   };
+
 
   return (
     <SafeAreaView className="flex-1">
       <Text className="text-xl font-bold text-black px-2 py-3">{t('main.profile')}</Text>
-      <View className="bg-gray-200 w-full h-40 items-center justify-center">
-        <View className={'rounded-full bg-gray-400 w-24 h-24 items-center justify-center'}>
-          <Text className={'font-bold text-5xl'}>{username.at(0)?.toUpperCase()}</Text>
+      <View className="bg-gray-200 w-full p-3">
+        <View className={'flex-row items-center gap-3'}>
+          <View className={'rounded-full bg-gray-400 w-24 h-24 items-center justify-center'}>
+            <Text className={'font-bold text-5xl'}>{userData.username.at(0)?.toUpperCase()}</Text>
+          </View>
+          <View>
+            <Text className={'text-2xl font-bold'}>{`${userData.firstName} ${userData.lastName}`}</Text>
+            <Text className={'text-base'}>({userData.username})</Text>
+          </View>
         </View>
-        <Text className={'text-xl'}>{username}</Text>
-        <Text className={'text-base'}>{email}</Text>
+        <View className={'px-3 py-3'}>
+          <Text className={'text-base'}>
+            <AntDesignIcon name='mail' size={20} color={'black'} /> {userData.email}
+          </Text>
+          <Text className={'text-base'}>
+            <AntDesignIcon name='phone' size={20} color={'black'} /> {userData.phoneNumber}
+          </Text>
+          <Text className={'text-base'}>
+            <AntDesignIcon name='home' size={20} color={'black'} /> {userData.address}
+          </Text>
+        </View>
       </View>
       <View className={'flex justify-around items-center flex-row mt-1'}>
         <View className={'w-[50%]'}>
@@ -53,7 +69,7 @@ export default function Profile() {
           <TouchableOpacity
             onPress={() => navigation.navigate('EditProfile')}
             className={'justify-center items-center bg-gray-300 p-5 m-1'}>
-            <AntDesignIcon name="setting" size={32} />
+            <AntDesignIcon name="edit" size={32} />
             <Text className={'mt-1 text-lg'}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity
