@@ -22,6 +22,7 @@ import fetchProductData from '../api/fetchProductData';
 import { ItemProps } from '../types/types';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { AuthenticationContext } from '../context/context';
+import fetchUser from '../api/fetchUser';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -38,7 +39,7 @@ const CarouselItem = ({ item }: { item: any }) => {
 
 export default function Home() {
   const { t } = useTranslation();
-  const { username } = React.useContext(AuthenticationContext);
+  const { userData } = React.useContext(AuthenticationContext);
   const navigation = useNavigation<ItemDetailsNavigationProp>();
   const [profilePress, setProfilePress] = React.useState<boolean>(false);
   const [carouselData, setCarouselData] = React.useState<ItemProps[]>([]);
@@ -66,9 +67,9 @@ export default function Home() {
       }
       catch (error) {
         console.log('Error fetcing products:', error);
-        setLoading(false);
       }
     }
+
 
     fetchAllProduct();
   }, []);
@@ -97,7 +98,7 @@ export default function Home() {
             onPressOut={() => setProfilePress(false)}
             onPress={() => navigation.navigate('ProfileStack')}
           >
-            <Text className={'font-bold text-2xl'}>{username.at(0)?.toUpperCase()}</Text>
+            <Text className={'font-bold text-2xl'}>{userData.username.at(0)?.toUpperCase()}</Text>
           </Pressable>
         </View>
         {/* Search Section */}

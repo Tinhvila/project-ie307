@@ -18,9 +18,9 @@ export default function Login() {
   const [revealPassword, setRevealPassword] = React.useState(false);
 
   const {
-    setUsername,
-    setEmail,
+    setId,
     setIsAuthenticated,
+    setUserData,
   } = React.useContext(AuthenticationContext);
   // Handle the login state with JSON server later
   const handleLogin = async () => {
@@ -48,8 +48,15 @@ export default function Login() {
 
     // If authentication is valid, allows the user to sign in
     Alert.alert("Login successfully", "You have logged in successfully.");
-    setUsername(checkData[0].username);
-    setEmail(checkData[0].email);
+    setId(checkData[0].id);
+    setUserData({
+      username: checkData[0].username,
+      firstName: checkData[0].firstName,
+      lastName: checkData[0].lastName,
+      address: checkData[0].address,
+      phoneNumber: checkData[0].phoneNumber,
+      email: checkData[0].email,
+    });
     setIsAuthenticated(true);
   };
 
@@ -63,12 +70,12 @@ export default function Login() {
               source={require('../assets/image/logo_2.png')}
             />
             <Text className={'text-2xl font-medium'}>Login</Text>
-            <View className={'mt-3'}>
+            <View className={'mt-3 items-center justify-center'}>
               <AntDesignIcon
                 name='mail'
                 size={24}
                 color={'gray'}
-                className={'absolute top-2 left-[6px]'}
+                className={'absolute left-2'}
               />
               <TextInput
                 className={'border-2 rounded-xl border-gray-300 w-80 pl-[30px] pr-2 py-3'}
@@ -77,12 +84,12 @@ export default function Login() {
                 onChangeText={(text) => setLoginAuthen(prev => ({ ...prev, email: text }))}
               />
             </View>
-            <View className={'mt-3'}>
+            <View className={'mt-3 items-center justify-center'}>
               <AntDesignIcon
                 name='lock'
                 size={24}
                 color={'gray'}
-                className={'absolute top-2 left-[6px]'}
+                className={'absolute left-2'}
               />
               <TextInput
                 className={'border-2 rounded-xl border-gray-300 w-80 pl-[30px] pr-2 py-3'}
@@ -95,7 +102,7 @@ export default function Login() {
                 name={revealPassword ? 'eye-slash' : 'eye'}
                 size={20}
                 color={'gray'}
-                className={'absolute top-3 right-3'}
+                className={'absolute right-3'}
                 onPress={() => setRevealPassword((prev) => !prev)}
               />
             </View>

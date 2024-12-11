@@ -1,19 +1,42 @@
 import React, { SetStateAction } from "react";
 
 export interface AuthenticationProp {
-  username: string;
-  email: string;
+  id: string;
+  userData: {
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    address: string;
+  };
   isAuthenticated: boolean;
-  setUsername: React.Dispatch<SetStateAction<string>>;
-  setEmail: React.Dispatch<SetStateAction<string>>;
   setIsAuthenticated: React.Dispatch<SetStateAction<boolean>>;
+  setId: React.Dispatch<SetStateAction<string>>;
+  setUserData: React.Dispatch<
+    SetStateAction<{
+      username: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+      address: string;
+    }>
+  >;
 }
 
 export const AuthenticationContext = React.createContext<AuthenticationProp>({
-  username: "",
-  email: "",
+  id: "",
+  userData: {
+    username: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    address: "",
+  },
   isAuthenticated: false,
-  setUsername: () => {},
-  setEmail: () => {},
   setIsAuthenticated: () => {},
+  setId: () => {},
+  setUserData: () => {},
 });
