@@ -6,9 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 import { AuthenticationContext } from '../context/context';
 import { patchUser } from '../api/fetchUser';
 import * as Yup from 'yup';
+import { ProfileStackNavigationProp } from '../types/navigation';
 
 export default function EditProfile() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<ProfileStackNavigationProp>();
   const { id } = React.useContext(AuthenticationContext);
   const { userData, setUserData } = React.useContext(AuthenticationContext);
   const [data, setData] = React.useState(userData);
@@ -80,7 +81,9 @@ export default function EditProfile() {
             <Text className={'text-xl font-bold text-black px-2 py-3'}>Edit Profile</Text>
           </View>
           <View>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ChangePassword')}
+            >
               <Text className={'text-xl font-bold text-blue-500 px-2 py-3'}>Change Password</Text>
             </TouchableOpacity>
           </View>
