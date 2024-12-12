@@ -33,6 +33,7 @@ export type ProfileStackNavigationParamList = {
   Profile: undefined;
   Order: undefined;
   EditProfile: undefined;
+  ChangePassword: undefined;
 };
 
 // Typechecking the AuthenticationStackScreen - navigation stack
