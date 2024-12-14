@@ -106,7 +106,7 @@ export default function Login() {
                 onPress={() => setRevealPassword((prev) => !prev)}
               />
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
               <Text className={'text-right w-80 mt-2 text-blue-500'}>Forgot password?</Text>
             </TouchableOpacity>
             <TouchableOpacity

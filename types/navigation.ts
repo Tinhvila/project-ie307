@@ -41,6 +41,10 @@ export type AuthenticationStackNavigationParamList = {
   Intro: undefined;
   Login: undefined;
   SignUp: undefined;
+  ForgotPassword: undefined;
+  ResetPassword: {
+    email: string;
+  };
 };
 
 // Type Navigation for Authentication
