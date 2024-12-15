@@ -23,6 +23,9 @@ import { RatingCount } from '../types/rating.type';
 import SliderPrice from '../components/SliderPrice';
 import SkeletonProductGrid from '../components/SkeletonProductGrid';
 import { useFocusEffect } from '@react-navigation/native';
+import OverlayLoading from '../components/OverlayLoading';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const brand = ['Pop Mart', 'The Monsters', 'Vinyl Toys', 'Collaborations'];
 
@@ -55,15 +58,17 @@ export default function Categories({ route }: { route: any }) {
 
   const [filteredProducts, setFilteredProducts] = useState<ItemProps[]>([]);
   const [visibleProductCount, setVisibleProductCount] = useState(20);
-
+  const { loading: loadingSync } = useSelector(
+    (state: RootState) => state.cart
+  );
   const visibleProducts = useMemo(
     () => filteredProducts.slice(0, visibleProductCount),
     [filteredProducts, visibleProductCount]
   );
 
   useEffect(() => {
-    setSelectedTag(route.params?.value || null)
-  }, [route.params])
+    setSelectedTag(route.params?.value || null);
+  }, [route.params]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -191,7 +196,8 @@ export default function Categories({ route }: { route: any }) {
   }
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row justify-between items-center overflow-x-hidden px-3 py-3">
+      <OverlayLoading loading={loadingSync} />
+      <View className="flex-row justify-between items-center overflow-x-hidden px-2 py-3">
         <Text className="text-xl font-bold text-black">
           {t('main.categories')}
         </Text>
@@ -294,7 +300,7 @@ export default function Categories({ route }: { route: any }) {
         </View>
       </Animated.View>
 
-      <View className="flex-row flex mb-2 px-3">
+      <View className="flex-row flex mb-2 px-2">
         <View className="flex flex-row gap-3 ">
           {tag.map((item, index) => (
             <Pressable

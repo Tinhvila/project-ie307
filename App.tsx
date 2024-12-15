@@ -5,6 +5,9 @@ import { AuthenticationContext } from './context/context';
 import AuthenticationStack from './navigations/AuthenticationStack';
 import ShoppingStack from './navigations/ShoppingStack';
 import Plash from './screens/Plash';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import { ToastProvider } from './components/toastContext';
 
 export default function App() {
   const [id, setId] = React.useState('');
@@ -16,7 +19,7 @@ export default function App() {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    address: ''
+    address: '',
   });
 
   useEffect(() => {
@@ -36,20 +39,24 @@ export default function App() {
   }
 
   return (
-    <AuthenticationContext.Provider
-      value={{
-        id,
-        userData,
-        isAuthenticated,
-        setIsAuthenticated,
-        setId,
-        setUserData,
-      }}
-    >
-      <NavigationContainer>
-        {/* <ShoppingStack /> */}
-        {isAuthenticated ? <ShoppingStack /> : <AuthenticationStack />}
-      </NavigationContainer>
-    </AuthenticationContext.Provider>
+    <ToastProvider>
+      <Provider store={store}>
+        <AuthenticationContext.Provider
+          value={{
+            id,
+            userData,
+            isAuthenticated,
+            setIsAuthenticated,
+            setId,
+            setUserData,
+          }}
+        >
+          <NavigationContainer>
+            {/* <ShoppingStack /> */}
+            {isAuthenticated ? <ShoppingStack /> : <AuthenticationStack />}
+          </NavigationContainer>
+        </AuthenticationContext.Provider>
+      </Provider>
+    </ToastProvider>
   );
 }

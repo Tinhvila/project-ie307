@@ -1,34 +1,46 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import QuantityControl from './QuantityControl';
 import { formatPrice } from '../utils/formatPrice';
+import { CartItem as CartItemType } from '../types/cartItem.type';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store';
+import { removeFromCart, updateCartItemQuantity } from '../redux/cartSlice';
+import { AuthenticationContext } from '../context/context';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '../components/toastContext';
 
-export default function CartItem() {
-  const [quantity, setQuantity] = useState(1);
-  const product = {
-    id: 1,
-    name: 'Elegant Minimalist Leather Jacket in Smooth Black Finish',
-    price: 250000,
-    discountPrice: 200000,
-    image:
-      'https://bizweb.dktcdn.net/thumb/large/100/467/909/products/z5694615634546-40ef32812307cfd099c48da0ee262b36.jpg?v=1722670247040',
-    remainingStock: 10,
-  };
-  const handleIncrease = () => {
-    if (quantity < product.remainingStock) {
-      setQuantity((prev) => prev + 1);
-    }
+interface Props {
+  product: CartItemType;
+}
+
+export default function CartItemComponent({ product }: Props) {
+  const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation();
+  const { showToast } = useToast();
+
+  const { id } = React.useContext(AuthenticationContext);
+
+  const handleRemoveItem = () => {
+    dispatch(removeFromCart({ id, itemId: product.id }));
+    setTimeout(() => {
+      showToast(t('messages.remove-from-cart'));
+    }, 0);
   };
 
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
+  const handleUpdateQuantity = (newQuantity: number) => {
+    dispatch(
+      updateCartItemQuantity({
+        id,
+        itemId: product.id,
+        quantity: newQuantity,
+      })
+    );
   };
 
   const calculateSubtotal = () => {
-    return (product.discountPrice || product.price) * quantity;
+    return (product.price || 0) * product.quantity;
   };
 
   return (
@@ -47,34 +59,31 @@ export default function CartItem() {
             <Text className="flex-1 pr-4 text-base font-bold line-clamp-2">
               {product.name}
             </Text>
-            <TouchableOpacity onPress={() => console.log('Remove product')}>
+            <TouchableOpacity onPress={handleRemoveItem}>
               <Icon name="close" size={24} color="gray" />
             </TouchableOpacity>
           </View>
 
           <View className="flex-row justify-between items-center mb-2">
             <View>
-              {product.discountPrice ? (
-                <>
-                  <Text className="text-gray-500 line-through text-sm">
-                    {formatPrice(product.price)}
-                  </Text>
-                  <Text className="text-red-500 font-bold">
-                    {formatPrice(product.discountPrice)}
-                  </Text>
-                </>
-              ) : (
-                <Text className="font-bold">{formatPrice(product.price)}</Text>
-              )}
+              {product.price ? (
+                <Text className="font-bold text-red-500">
+                  {formatPrice(product.price)}
+                </Text>
+              ) : null}
             </View>
           </View>
 
           <View className="flex-row justify-between items-center">
             <QuantityControl
-              quantity={quantity}
-              onIncrease={handleIncrease}
-              onDecrease={handleDecrease}
-              maxQuantity={product.remainingStock}
+              quantity={product.quantity}
+              onIncrease={() => handleUpdateQuantity(product.quantity + 1)}
+              onDecrease={() =>
+                handleUpdateQuantity(
+                  product.quantity > 1 ? product.quantity - 1 : 1
+                )
+              }
+              maxQuantity={10}
             />
             <Text className="font-bold text-base">
               {formatPrice(calculateSubtotal())}

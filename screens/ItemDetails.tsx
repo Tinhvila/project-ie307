@@ -50,6 +50,8 @@ export default function ItemDetails({
     }
   };
 
+  function handleBuyNow() {}
+
   // Navigation Icon dominant color
 
   const [dominantColor, setDominantColor] = React.useState(null);
@@ -88,10 +90,13 @@ export default function ItemDetails({
         </View>
         <View className={'flex flex-row items-center'}>
           <Text
-            className={`font-bold text-2xl ${discountPrice ? 'text-green-600' : 'text-black'
-              }`}
+            className={`font-bold text-2xl ${
+              discountPrice ? 'text-green-600' : 'text-black'
+            }`}
           >
-            {discountPrice ? formatPrice(discountPrice) : formatPrice(initialPrice)}
+            {discountPrice
+              ? formatPrice(discountPrice)
+              : formatPrice(initialPrice)}
           </Text>
           {discountPrice && (
             <>
@@ -142,6 +147,7 @@ export default function ItemDetails({
           </View>
         </View>
         <TouchableOpacity
+          onPress={handleBuyNow}
           className={
             'bg-black p-3 rounded-sm items-center flex-row justify-center'
           }

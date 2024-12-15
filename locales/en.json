@@ -16,5 +16,23 @@
       "premium_delivery": "Premium delivery",
       "cost_delivery": "Charged delivery"
     }
+  },
+  "messages": {
+    "add-to-cart": "Added to cart successfully",
+    "remove-from-cart": "Removed from cart successfully",
+    "clear-cart": "All items have been removed from the cart",
+    "add-to-favorite": "Added to the favorite list",
+    "remove-to-favorite": "Removed from the favorite list",
+    "clear-favorite": "All items have been removed from the favorite list"
+  },
+  "alert": {
+    "confirm": "Confirm",
+    "no": "No",
+    "yes": "Yes",
+    "clear-cart": "Are you sure you want to clear all items in the cart?"
+  },
+  "cart": {
+    "clear-cart": "Clear Cart",
+    "cart-empty-message": "Your cart is empty. Start shopping!"
   }
 }

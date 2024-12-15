@@ -15,8 +15,6 @@ export default function Rating({
   ratingSelected,
   onSetRatingSelected,
 }: Props) {
-  const { t } = useTranslation();
-
   const isRatingSelected = (rating: number) => ratingSelected.includes(rating);
 
   const handleRatingToggle = (rating: number) => {
