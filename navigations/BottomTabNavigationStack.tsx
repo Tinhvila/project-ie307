@@ -2,14 +2,13 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Categories from '../screens/Categories';
-import Search from '../screens/Search';
 import Cart from '../screens/Cart';
-import Profile from '../screens/Profile';
 import { StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BottomTabNavigationStackParamList } from '../types/navigation';
 import HomeStackNavigation from './HomeStackNavigation';
 import ProfileStackNavigation from './ProfileStackNavigation';
+import SearchStackScreen from './SearchStackScreen';
 
 const Tab = createBottomTabNavigator<BottomTabNavigationStackParamList>();
 
@@ -45,8 +44,8 @@ export default function BottomTabNavigationStack() {
         }}
       />
       <Tab.Screen
-        name="Search"
-        component={Search}
+        name="SearchStack"
+        component={SearchStackScreen}
         options={{
           tabBarLabelStyle: {
             display: 'none',

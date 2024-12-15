@@ -8,8 +8,9 @@ interface Total_Product {
 
 export default async function fetchProductData(
   params: {
+    filterId?: string | null;
     priceSort?: string | null;
-    // priceFilter?: number;
+    filterTitle?: string | null;
     ratingFilter?: number[];
     minPrice?: number;
     maxPrice?: number;
@@ -21,32 +22,40 @@ export default async function fetchProductData(
     const queryParams = new URLSearchParams();
 
     if (params.priceSort) {
-      queryParams.append('_sort', 'discountPrice');
-      queryParams.append('_order', params.priceSort);
+      queryParams.append("_sort", "discountPrice");
+      queryParams.append("_order", params.priceSort);
     }
 
     if (params.minPrice) {
-      queryParams.append('discountPrice_gte', params.minPrice.toString());
+      queryParams.append("discountPrice_gte", params.minPrice.toString());
     }
 
     if (params.maxPrice) {
-      queryParams.append('discountPrice_lte', params.maxPrice.toString());
+      queryParams.append("discountPrice_lte", params.maxPrice.toString());
     }
 
     if (params.ratingFilter && params.ratingFilter.length) {
       params.ratingFilter.forEach((ratingFilter) =>
-        queryParams.append('rating', ratingFilter.toString())
+        queryParams.append("rating", ratingFilter.toString())
       );
     }
 
     if (params.tag) {
-      if (params.tag === 1) queryParams.append('isHotDeal', 'true');
-      if (params.tag === 2) queryParams.append('isUpcomingEvent', 'true');
-      if (params.tag === 3) queryParams.append('isNewProduct', 'true');
+      if (params.tag === 1) queryParams.append("isHotDeal", "true");
+      if (params.tag === 2) queryParams.append("isUpcomingEvent", "true");
+      if (params.tag === 3) queryParams.append("isNewProduct", "true");
     }
 
     if (params.brandSelected) {
-      queryParams.append('brand', params.brandSelected);
+      queryParams.append("brand", params.brandSelected);
+    }
+
+    if (params.filterTitle) {
+      queryParams.append("title_like", params.filterTitle);
+    }
+
+    if (params.filterId) {
+      queryParams.append("id", params.filterId);
     }
 
     const apiUrl = `${API}?${queryParams.toString()}`;
@@ -56,7 +65,7 @@ export default async function fetchProductData(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const totalCount = response.headers.get('X-Total-Count');
+    const totalCount = response.headers.get("X-Total-Count");
     const total = totalCount ? parseInt(totalCount, 10) : null;
     const data: ItemProps[] = await response.json();
 

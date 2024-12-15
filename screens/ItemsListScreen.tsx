@@ -8,16 +8,38 @@ import { ItemsListScreenRouteProp } from '../types/navigation'
 import { useNavigation } from '@react-navigation/native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import fetchProductData from '../api/fetchProductData'
 
-export default function ItemsListScreen({ route }: { route: ItemsListScreenRouteProp }) {
+export default function ItemsListScreen({ route }: { route: any }) {
   const { t } = useTranslation();
+  const { value, id } = route.params;
   const ITEMS_PER_PAGE = 8;
-  const { title, data } = route.params;
   const navigation = useNavigation();
-  const [allData, setAllData] = React.useState<ItemProps[]>(data);
+  const [allData, setAllData] = React.useState<ItemProps[]>([]);
   const [loading, setLoading] = React.useState(false);
-  const [displayedData, setDisplayedData] = React.useState<ItemProps[]>(data.slice(0, ITEMS_PER_PAGE));
+  const [displayedData, setDisplayedData] = React.useState<ItemProps[]>([]);
   const [hasMoreData, setHasMoreData] = React.useState(true);
+  const [noResult, setNoResult] = React.useState(false);
+
+  // Load data from searched product
+  React.useEffect(() => {
+    const getData = async () => {
+      let params = {};
+      if (id)
+        params = { filterId: id };
+      else
+        params = { filterTitle: value };
+      const filteredData = await fetchProductData(params);
+      if (!filteredData.data || filteredData.data.length === 0) {
+        setNoResult(true);
+        return;
+      }
+      setAllData(filteredData.data);
+      setDisplayedData(filteredData.data.slice(0, ITEMS_PER_PAGE));
+    }
+
+    getData();
+  }, [value]);
 
   const loadMoreItems = () => {
     if (loading || !hasMoreData) return;
@@ -51,6 +73,27 @@ export default function ItemsListScreen({ route }: { route: ItemsListScreenRoute
     }
   };
 
+  if (noResult) {
+    return (
+      <SafeAreaView className={'flex'}>
+        <View className={'flex flex-row items-center'}>
+          <TouchableOpacity
+            className={'pl-4'}
+            onPress={() => navigation.goBack()}
+          >
+            <AntDesignIcon name={'left'} size={20} />
+          </TouchableOpacity>
+          <Text className="text-xl text-black pl-4 pr-6 py-3 line-clamp-1">
+            Search result for <Text className={'font-bold'}>"{value}"</Text>
+          </Text>
+        </View>
+        <View className={'justify-center items-center'}>
+          <Text className={'font-bold text-xl'}>No result found</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView>
       <View className={'flex flex-row items-center'}>
@@ -58,18 +101,20 @@ export default function ItemsListScreen({ route }: { route: ItemsListScreenRoute
           className={'pl-4'}
           onPress={() => navigation.goBack()}
         >
-          <AntDesignIcon name={'left'} size={32} />
+          <AntDesignIcon name={'left'} size={20} />
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-black px-4 py-3">
-          {title ? title : 'Item List Screen'}
+        <Text className="text-xl text-black pl-4 py-3 line-clamp-1">
+          Search result for <Text className={'font-bold'}>"{value}"</Text>
         </Text>
       </View>
       {/* Display items here with map */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerClassName="px-2"
-        onScroll={handleScroll}>
-        <View className="flex-row flex-wrap justify-between">
+        contentContainerStyle={{ flexGrow: 1 }}
+        onScroll={handleScroll}
+      >
+        <View className="flex-column flex-wrap justify-between">
           <View className="flex-row flex-wrap justify-between">
             {displayedData.map((item, index) => (
               <View className="w-[50%]" key={index}>
