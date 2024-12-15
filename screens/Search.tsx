@@ -6,7 +6,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { AuthenticationContext } from '../context/context';
-import fetchUser from '../api/fetchUser';
+import fetchUser, { patchUser } from '../api/fetchUser';
 import fetchProductData from '../api/fetchProductData';
 import { SearchStackNavigationProp } from '../types/navigation';
 
@@ -19,7 +19,7 @@ export default function Search() {
   const { t } = useTranslation();
   const navigation = useNavigation<SearchStackNavigationProp>();
   const textInputRef = React.useRef<null | any>();
-  const { id } = React.useContext(AuthenticationContext);
+  const { id: userId } = React.useContext(AuthenticationContext);
   const [searchText, setSearchText] = React.useState('');
   const [loadSearch, setLoadSearch] = React.useState(true);
   const [searchData, setSearchData] = React.useState<SearchProp[]>([]);
@@ -36,6 +36,26 @@ export default function Search() {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
+
+  // History Data
+  const loadHistoryData = async () => {
+    const params = { id: userId };
+    const historyDataResult = await fetchUser(params);
+    if (historyDataResult && historyDataResult.length > 0) {
+      const historyData = historyDataResult[0].searchHistory;
+
+      if (searchText !== '') {
+        // When searchText has a value, filter history data
+        const filteredHistoryData = historyData?.filter((value) =>
+          value.toLowerCase().includes(searchText.toLowerCase())
+        );
+        setHistoryData(filteredHistoryData || []);
+      } else {
+        // When searchText is empty, use the full history data
+        setHistoryData(historyData || []);
+      }
+    }
+  };
 
   React.useEffect(() => {
     const filterSearch = async () => {
@@ -54,39 +74,62 @@ export default function Search() {
       }
     };
 
-    // History Data
-    const loadHistoryData = async () => {
-      const params = { id };
-      const historyDataResult = await fetchUser(params);
-      if (historyDataResult && historyDataResult.length > 0) {
-        const historyData = historyDataResult[0].searchHistory;
-
-        if (searchText !== '') {
-          // When searchText has a value, filter history data
-          const filteredHistoryData = historyData?.filter((value) =>
-            value.toLowerCase().includes(searchText.toLowerCase())
-          );
-          setHistoryData(filteredHistoryData || []);
-        } else {
-          // When searchText is empty, use the full history data
-          setHistoryData(historyData || []);
-        }
-      }
-    };
-
     loadHistoryData();
     filterSearch();
 
   }, [searchText]); // Runs whenever searchText changes
 
   // Handle the filter search
-  const handleFilterSearch = () => {
+  const handleFilterSearch = async () => {
+    // Patch the search history to the history
+    const params = { id: userId };
+    // Get the history data from the user first
+    const userData = await fetchUser(params);
+    if (userData && userData.length > 0) {
+      const updatedSearchHistory = userData[0].searchHistory
+        ? userData[0].searchHistory.includes(searchText)
+          ? userData[0].searchHistory
+          : [...userData[0].searchHistory, searchText]
+        : [searchText];
+      const result = await patchUser(String(userId), {
+        searchHistory: updatedSearchHistory,
+      });
+    }
     navigation.navigate('ItemsListScreen', { value: searchText });
   };
 
   // Handle the value search
-  const handleValueSearch = (value: string, id?: string) => {
+  const handleValueSearch = async (value: string, id?: string) => {
+    // Patch the search history to the history
+    const params = { id: userId };
+    // Get the history data from the user first
+    const userData = await fetchUser(params);
+    if (userData && userData.length > 0) {
+      const updatedSearchHistory = userData[0].searchHistory
+        ? userData[0].searchHistory.includes(value)
+          ? userData[0].searchHistory
+          : [...userData[0].searchHistory, value]
+        : [value];
+
+      const result = await patchUser(String(userId), {
+        searchHistory: updatedSearchHistory,
+      });
+    }
     navigation.navigate('ItemsListScreen', { value, id });
+  }
+
+  const handleDeleteHistory = async (value: string) => {
+    const params = { id: userId };
+
+    const userData = await fetchUser(params);
+    if (userData && userData.length > 0) {
+      const updatedSearchHistory = userData[0].searchHistory?.filter((element) => element !== value);
+      const result = await patchUser(String(userId), {
+        searchHistory: updatedSearchHistory,
+      });
+    }
+
+    await loadHistoryData();
   }
 
   return (
@@ -109,13 +152,19 @@ export default function Search() {
             </TouchableOpacity>
           </View>
           <ScrollView>
-            {historyData.slice(0, 20).map((value, index) => (
+            {historyData.slice(0, 20).slice().reverse().map((value, index) => (
               <TouchableOpacity
                 onPress={() => handleValueSearch(value)}
                 key={index}
-                className={'flex-row items-center gap-3 p-5 border-b-black border-b'}>
+                className={'flex-row items-center gap-3 p-5 border-b-black border-b'}
+              >
                 <MaterialIcons name={'history'} size={24} />
                 <Text className={'text-xl line-clamp-1 pr-5'}>{value}</Text>
+                <TouchableOpacity
+                  onPress={() => handleDeleteHistory(value)}
+                  className={'absolute right-0 bg-gray-100 p-2'}>
+                  <MaterialIcons name={'close'} size={24} />
+                </TouchableOpacity>
               </TouchableOpacity>
             ))
             }
