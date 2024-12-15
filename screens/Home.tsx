@@ -122,9 +122,9 @@ export default function Home() {
               render={({ item }) => <CarouselItem item={item} />}
             />
           </View>
-          <ListView title={'Hot Deals 🔥'} data={hotDealData} limitDisplay={ITEMS_PER_LIST} />
-          <ListView title={'New Arrival 📦'} data={newArrivalData} limitDisplay={ITEMS_PER_LIST} />
-          <ListView title={'Upcoming Event 🥇'} data={eventData} limitDisplay={ITEMS_PER_LIST} />
+          <ListView title={'Hot Deals 🔥'} data={hotDealData} limitDisplay={ITEMS_PER_LIST} idValue={1} />
+          <ListView title={'New Arrival 📦'} data={newArrivalData} limitDisplay={ITEMS_PER_LIST} idValue={2} />
+          <ListView title={'Upcoming Event 🥇'} data={eventData} limitDisplay={ITEMS_PER_LIST} idValue={3} />
         </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>

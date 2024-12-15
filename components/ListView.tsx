@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { HomeStackNavigationParamList, ItemDetailsScreenRouteProp, ItemsListScreenNavigationProp, ItemsListScreenRouteProp } from '../types/navigation';
 import { ItemProps } from '../types/types';
 
-const ListView = ({ title, data, limitDisplay }: { title: string, data: ItemProps[], limitDisplay?: number }) => {
+const ListView = ({ title, data, limitDisplay, idValue }: { title: string, data: ItemProps[], limitDisplay?: number, idValue?: number }) => {
   const navigation = useNavigation<ItemsListScreenNavigationProp>();
 
   return (
@@ -14,10 +14,7 @@ const ListView = ({ title, data, limitDisplay }: { title: string, data: ItemProp
       <View className={'mx-4 flex flex-row justify-between items-center'}>
         <Text className={"text-2xl font-bold text-orange-500 py-3"}>{title}</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('ItemsListScreen', {
-            title: title,
-            data: data
-          })}
+          onPress={() => navigation.navigate('Categories', { value: idValue ? idValue : 0 })}
         >
           <AntDesignIcon name={'appstore1'} size={24} />
         </TouchableOpacity>
