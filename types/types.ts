@@ -1,5 +1,3 @@
-import React, { SetStateAction } from "react";
-
 // Item details for item props
 export interface ItemProps {
   id: string;
@@ -41,8 +39,6 @@ export interface UserProps {
       // Update in the future
     }
   ];
-  favorite?: [
-    id: string //Id from ItemProps
-  ];
-  searchHistory?: [];
+  favorite?: string[]; //Item id as string
+  searchHistory?: string[];
 }

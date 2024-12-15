@@ -15,7 +15,7 @@ import {
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
-import { ItemDetailsNavigationProp } from '../types/navigation';
+import { HomeStackNavigationParamList, ItemDetailsNavigationProp } from '../types/navigation';
 import CustomCarousel from '../components/CustomCarousel';
 import ListView from '../components/ListView';
 import fetchProductData from '../api/fetchProductData';
@@ -40,7 +40,7 @@ const CarouselItem = ({ item }: { item: any }) => {
 export default function Home() {
   const { t } = useTranslation();
   const { userData } = React.useContext(AuthenticationContext);
-  const navigation = useNavigation<ItemDetailsNavigationProp>();
+  const navigation = useNavigation<HomeStackNavigationParamList & ItemDetailsNavigationProp>();
   const [profilePress, setProfilePress] = React.useState<boolean>(false);
   const [carouselData, setCarouselData] = React.useState<ItemProps[]>([]);
   const [hotDealData, setHotDealData] = React.useState<ItemProps[]>([]);
@@ -108,7 +108,7 @@ export default function Home() {
           } />
           <Text
             className={'text-gray-400 border-gray-500 border-2 rounded-3xl pl-12 pr-4 py-2'}
-            onPress={() => navigation.navigate('Search')}
+            onPress={() => navigation.navigate('SearchStack')}
           >Search item, product, categories...</Text>
         </View>
         {/* Item Section */}

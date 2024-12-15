@@ -5,16 +5,16 @@ import { ItemProps } from "./types";
 // Typechecking the shopping stack navigator - navigation stack
 export type ShoppingStackNavigator = {
   BottomScreen: BottomTabNavigationStackParamList;
-  Search: undefined;
   ProfileStack: undefined;
   ItemDetails: ItemProps;
+  SearchStack: undefined;
 };
 
 // Typechecking the bottom tab navigator - tab stack
 export type BottomTabNavigationStackParamList = {
   HomeStack: HomeStackNavigationParamList;
   Categories: undefined;
-  Search: undefined;
+  SearchStack: undefined;
   Cart: undefined;
   ProfileStack: undefined;
 };
@@ -24,6 +24,15 @@ export type HomeStackNavigationParamList = {
   Home: undefined;
   Categories: {
     value?: number;
+  };
+};
+
+// Typechecking the Search Stack - navigation stack screen
+export type SearchStackNavigationParamList = {
+  Search: undefined;
+  ItemsListScreen: {
+    value?: string;
+    id?: string;
   };
 };
 
@@ -53,6 +62,10 @@ export type AuthenticationStackNavigationProp =
 // Type Navigation for Profile
 export type ProfileStackNavigationProp =
   NativeStackNavigationProp<ProfileStackNavigationParamList>;
+
+// Type Navigation for Search
+export type SearchStackNavigationProp =
+  NativeStackNavigationProp<SearchStackNavigationParamList>;
 
 // Type Navigation from any Item Card to Item Details - navigation prop
 export type ItemDetailsNavigationProp = NativeStackNavigationProp<
