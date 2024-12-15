@@ -22,6 +22,7 @@ import Rating from '../components/Rating';
 import { RatingCount } from '../types/rating.type';
 import SliderPrice from '../components/SliderPrice';
 import SkeletonProductGrid from '../components/SkeletonProductGrid';
+import { useFocusEffect } from '@react-navigation/native';
 
 const brand = ['Pop Mart', 'The Monsters', 'Vinyl Toys', 'Collaborations'];
 
@@ -36,7 +37,7 @@ const priceLabel = [
   { label: 'Giá giảm dần', value: 'desc' },
 ];
 
-export default function Categories() {
+export default function Categories({ route }: { route: any }) {
   const { t } = useTranslation();
   const [dataDisplay, setDataDisplay] = useState<ItemProps[]>([]);
   const [data, setData] = useState<ItemProps[]>([]);
@@ -58,6 +59,18 @@ export default function Categories() {
   const visibleProducts = useMemo(
     () => filteredProducts.slice(0, visibleProductCount),
     [filteredProducts, visibleProductCount]
+  );
+
+  useEffect(() => {
+    setSelectedTag(route.params?.value || null)
+  }, [route.params])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setSelectedTag(null);
+      };
+    }, [])
   );
 
   const filterBoxTranslation = useRef(

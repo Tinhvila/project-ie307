@@ -22,9 +22,8 @@ export type BottomTabNavigationStackParamList = {
 // Typechecking the HomeStackScreen - navigation stack
 export type HomeStackNavigationParamList = {
   Home: undefined;
-  ItemsListScreen: {
-    title: string;
-    data: ItemProps[];
+  Categories: {
+    value?: number;
   };
 };
 
@@ -62,19 +61,11 @@ export type ItemDetailsNavigationProp = NativeStackNavigationProp<
 >;
 
 // Type Navigation from Any Item Card to to Items List Screen - navigation prop
-export type ItemsListScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackNavigationParamList,
-  "ItemsListScreen"
->;
+export type ItemsListScreenNavigationProp =
+  NativeStackNavigationProp<HomeStackNavigationParamList>;
 
 // Type Route to Item Detail Screen - route prop
-export type ItemDetailsScreenRouteProp = RouteProp<
-  ShoppingStackNavigator,
-  "ItemDetails"
->;
+export type ItemDetailsScreenRouteProp = RouteProp<ShoppingStackNavigator>;
 
 // Type Route to Item List Screen - route prop
-export type ItemsListScreenRouteProp = RouteProp<
-  HomeStackNavigationParamList,
-  "ItemsListScreen"
->;
+export type ItemsListScreenRouteProp = RouteProp<HomeStackNavigationParamList>;
