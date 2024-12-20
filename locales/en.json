@@ -6,7 +6,20 @@
     "profile": "Profile"
   },
   "profile": {
-    "hello": "Hello"
+    "change-language": "English -> Tiếng Việt",
+    "edit-profile": "Edit Profile",
+    "log-out": "Log Out",
+    "username": "Username",
+    "first-name": "First Name",
+    "last-name": "Last Name",
+    "email": "Email",
+    "address": "Address",
+    "phone-number": "Phone Number",
+    "change-password": "Change Password",
+    "current-password": "Current Password",
+    "new-password": "New Password",
+    "retype-new-password": "Retype New Password",
+    "order-title": "Order"
   },
   "item_detail": {
     "buynow_button": "BUY NOW",
@@ -22,7 +35,7 @@
     "remove-from-cart": "Removed from cart successfully",
     "clear-cart": "All items have been removed from the cart",
     "add-to-favorite": "Added to the favorite list",
-    "remove-to-favorite": "Removed from the favorite list",
+    "remove-from-favorite": "Removed from the favorite list",
     "clear-favorite": "All items have been removed from the favorite list"
   },
   "alert": {
@@ -34,5 +47,46 @@
   "cart": {
     "clear-cart": "Clear Cart",
     "cart-empty-message": "Your cart is empty. Start shopping!"
+  },
+  "button": {
+    "confirm": "Confirm",
+    "reset-filter": "Reset filter"
+  },
+  "search": {
+    "search-placeholder": "Search item, product,..."
+  },
+  "home": {
+    "check-out": "Check out our latest product!",
+    "hot-deals": "Hot Deals 🔥",
+    "upcoming-event": "Upcoming Event 🥇",
+    "new-arrival": "New Arrival 📦"
+  },
+  "categories": {
+    "hot-deals": "Hot Deals",
+    "upcoming-event": "Upcoming Event",
+    "new-arrival": "New Arrival",
+    "sort-by-price": "Sort by price",
+    "sort-by-price-ascending": "Ascending price",
+    "sort-by-price-descending": "Descending price",
+    "filter": "Filters",
+    "brand": "Brand",
+    "price": "Price",
+    "rating": "Rating"
+  },
+  "authentication": {
+    "intro-title": "Bring yourself a new style with Titan",
+    "login": "Login",
+    "sign-up": "Sign Up",
+    "password": "Password",
+    "forgot-password": "Forgot password",
+    "no-account": "Don't have an account?",
+    "username": "Username",
+    "confirm-password": "Confirm Password",
+    "create-account": "CREATE ACCOUNT",
+    "sign-in-upper": "SIGN IN",
+    "has-account": "Already have an account?",
+    "sign-in": "Sign In",
+    "en": "EN",
+    "vi": "VI"
   }
 }

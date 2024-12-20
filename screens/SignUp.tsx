@@ -8,33 +8,29 @@ import { AuthenticationStackNavigationProp } from '../types/navigation';
 import fetchUser, { postUser } from '../api/fetchUser';
 import * as Yup from 'yup';
 import { hashPassword } from '../utils/hashPassword';
+import { AuthenticationContext } from '../context/context';
+import { useTranslation } from 'react-i18next';
 
 
 export default function SignUp() {
+  const { t } = useTranslation();
   const navigation = useNavigation<AuthenticationStackNavigationProp>();
   const [signUpAuthen, setSignUpAuthen] = React.useState({
     username: '',
     email: '',
     password: '',
     retypePassword: '',
-    firstName: '',
-    lastName: '',
-    address: '',
-    phoneNumber: '',
   });
   const [revealPassword, setRevealPassword] = React.useState({
     password: false,
     retypePassword: false,
   });
 
+  const { setIsAuthenticated, setId, setUserData } = React.useContext(AuthenticationContext);
   const handleSignUp = async () => {
     // Handle empty field
     if (
-      signUpAuthen.firstName === ''
-      || signUpAuthen.lastName === ''
-      || signUpAuthen.username === ''
-      || signUpAuthen.phoneNumber === ''
-      || signUpAuthen.address === ''
+      signUpAuthen.username === ''
       || signUpAuthen.email === ''
       || signUpAuthen.password === ''
       || signUpAuthen.retypePassword === '') {
@@ -84,13 +80,13 @@ export default function SignUp() {
     // If data does not exist, add into the json database
     // If validate successfully, direct the user to Home
     const result = await postUser({
-      firstName: signUpAuthen.firstName,
-      lastName: signUpAuthen.lastName,
+      firstName: '',
+      lastName: '',
       username: signUpAuthen.username,
       email: signUpAuthen.email,
       password: hashedPassword,
-      address: signUpAuthen.address,
-      phoneNumber: signUpAuthen.phoneNumber,
+      address: '',
+      phoneNumber: '',
       cart: [],
       order: [],
       favorite: [],
@@ -98,7 +94,21 @@ export default function SignUp() {
     });
     if (result) {
       Alert.alert("Sign up successfully", "Congratulations, you have signed up successfully.");
-      navigation.replace('Login');
+      // Refetch the data to get id
+      const params = { email: signUpAuthen.email };
+      const getLatestData = await fetchUser(params);
+      if (getLatestData && getLatestData.length > 0) {
+        setId(getLatestData[0].id);
+        setUserData({
+          username: getLatestData[0].username,
+          firstName: getLatestData[0].firstName,
+          lastName: getLatestData[0].lastName,
+          address: getLatestData[0].address,
+          phoneNumber: getLatestData[0].phoneNumber,
+          email: getLatestData[0].email,
+        });
+        setIsAuthenticated(true);
+      }
     } else {
       console.error("Error while inserting data.");
     }
@@ -117,7 +127,7 @@ export default function SignUp() {
                 className={'w-52 h-24 object-contain'}
                 source={require('../assets/image/logo_2.png')}
               />
-              <Text className={'text-2xl font-medium'}>Sign Up</Text>
+              <Text className={'text-2xl font-medium'}>{t('authentication.sign-up')}</Text>
               <View className={'mt-3 items-center justify-center'}>
                 <AntDesignIcon
                   name='user'
@@ -127,68 +137,10 @@ export default function SignUp() {
                 />
                 <TextInput
                   className={'border-2 rounded-xl border-gray-300 w-80 pl-[30px] pr-2 py-3'}
-                  placeholder='Username'
+                  placeholder={t('authentication.username')}
                   value={signUpAuthen.username}
                   onChangeText={(text) => setSignUpAuthen(prev => ({ ...prev, username: text }))}
-                />
-              </View>
-              <View className={'flex-row w-80 justify-between'}>
-                <View className={'mt-3 items-center justify-center'}>
-                  <AntDesignIcon
-                    name='user'
-                    size={24}
-                    color={'gray'}
-                    className={'absolute left-2'}
-                  />
-                  <TextInput
-                    className={'border-2 rounded-xl border-gray-300 w-36 pl-[30px] pr-2 py-3'}
-                    placeholder='First name'
-                    value={signUpAuthen.firstName}
-                    onChangeText={(text) => setSignUpAuthen(prev => ({ ...prev, firstName: text }))}
-                  />
-                </View>
-                <View className={'mt-3 items-center justify-center'}>
-                  <AntDesignIcon
-                    name='user'
-                    size={24}
-                    color={'gray'}
-                    className={'absolute left-2'}
-                  />
-                  <TextInput
-                    className={'border-2 rounded-xl border-gray-300 w-36 pl-[30px] pr-2 py-3'}
-                    placeholder='Last name'
-                    value={signUpAuthen.lastName}
-                    onChangeText={(text) => setSignUpAuthen(prev => ({ ...prev, lastName: text }))}
-                  />
-                </View>
-              </View>
-              <View className={'mt-3 items-center justify-center'}>
-                <AntDesignIcon
-                  name='phone'
-                  size={24}
-                  color={'gray'}
-                  className={'absolute left-2'}
-                />
-                <TextInput
-                  className={'border-2 rounded-xl border-gray-300 w-80 pl-[30px] pr-2 py-3'}
-                  placeholder='Phone number'
-                  value={signUpAuthen.phoneNumber}
-                  onChangeText={(text) => setSignUpAuthen(prev => ({ ...prev, phoneNumber: text }))}
-                  inputMode='numeric'
-                />
-              </View>
-              <View className={'mt-3 items-center justify-center'}>
-                <AntDesignIcon
-                  name='home'
-                  size={24}
-                  color={'gray'}
-                  className={'absolute left-2'}
-                />
-                <TextInput
-                  className={'border-2 rounded-xl border-gray-300 w-80 pl-[30px] pr-2 py-3'}
-                  placeholder='Address'
-                  value={signUpAuthen.address}
-                  onChangeText={(text) => setSignUpAuthen(prev => ({ ...prev, address: text }))}
+                  autoComplete='username'
                 />
               </View>
               <View className={'mt-3 items-center justify-center'}>
@@ -203,6 +155,8 @@ export default function SignUp() {
                   placeholder='Email'
                   value={signUpAuthen.email}
                   onChangeText={(text) => setSignUpAuthen(prev => ({ ...prev, email: text }))}
+                  autoComplete='email'
+                  inputMode='email'
                 />
               </View>
               <View className={'mt-3 items-center justify-center'}>
@@ -214,7 +168,7 @@ export default function SignUp() {
                 />
                 <TextInput
                   className={'border-2 rounded-xl border-gray-300 w-80 pl-[30px] pr-2 py-3'}
-                  placeholder='Password'
+                  placeholder={t('authentication.password')}
                   secureTextEntry={revealPassword.password ? false : true}
                   value={signUpAuthen.password}
                   onChangeText={(text) => setSignUpAuthen(prev => ({ ...prev, password: text }))}
@@ -236,7 +190,7 @@ export default function SignUp() {
                 />
                 <TextInput
                   className={'border-2 rounded-xl border-gray-300 w-80 pl-[30px] pr-2 py-3'}
-                  placeholder='Confirm Password'
+                  placeholder={t('authentication.confirm-password')}
                   secureTextEntry={revealPassword.retypePassword ? false : true}
                   value={signUpAuthen.retypePassword}
                   onChangeText={(text) => setSignUpAuthen(prev => ({ ...prev, retypePassword: text }))}
@@ -253,15 +207,15 @@ export default function SignUp() {
                 onPress={handleSignUp}
                 className={'bg-[#0d3092] mt-5 py-3 px-10 rounded-full'}
               >
-                <Text className={'text-white text-xl font-bold'}>CREATE ACCOUNT</Text>
+                <Text className={'text-white text-xl font-bold'}>{t('authentication.create-account')}</Text>
               </TouchableOpacity>
-              <Text className={'text-base mt-5'}>Already have an account?
+              <Text className={'text-base mt-5'}>{t('authentication.has-account')}
                 <Text
                   className={'text-blue-500 font-bold'}
                   onPress={() => {
                     navigation.replace('Login')
                   }}
-                > Sign In
+                > {t('authentication.sign-in')}
                 </Text>
               </Text>
             </View>

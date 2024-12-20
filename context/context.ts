@@ -11,6 +11,7 @@ export interface AuthenticationProp {
     address: string;
   };
   isAuthenticated: boolean;
+  language: "English" | "Vietnamese";
   setIsAuthenticated: React.Dispatch<SetStateAction<boolean>>;
   setId: React.Dispatch<SetStateAction<string>>;
   setUserData: React.Dispatch<
@@ -23,6 +24,7 @@ export interface AuthenticationProp {
       address: string;
     }>
   >;
+  setLanguage: React.Dispatch<SetStateAction<"English" | "Vietnamese">>;
 }
 
 export const AuthenticationContext = React.createContext<AuthenticationProp>({
@@ -35,8 +37,10 @@ export const AuthenticationContext = React.createContext<AuthenticationProp>({
     phoneNumber: "",
     address: "",
   },
+  language: "English",
   isAuthenticated: false,
   setIsAuthenticated: () => {},
   setId: () => {},
   setUserData: () => {},
+  setLanguage: () => {},
 });

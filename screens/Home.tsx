@@ -114,9 +114,8 @@ export default function Home() {
             {t('main.home')}
           </Text>
           <Pressable
-            className={`mr-2 w-10 h-10 rounded-[100%] items-center justify-center ${
-              profilePress ? 'bg-gray-500' : 'bg-gray-300'
-            }`}
+            className={`mr-2 w-10 h-10 rounded-[100%] items-center justify-center ${profilePress ? 'bg-gray-500' : 'bg-gray-300'
+              }`}
             onPressIn={() => setProfilePress(true)}
             onPressOut={() => setProfilePress(false)}
             onPress={() => navigation.navigate('ProfileStack')}
@@ -139,13 +138,13 @@ export default function Home() {
             }
             onPress={() => navigation.navigate('SearchStack')}
           >
-            Search item, product, categories...
+            {t('search.search-placeholder')}
           </Text>
         </View>
         {/* Item Section */}
         <ScrollView className={'flex-1'}>
           <Text className={'text-2xl font-bold text-orange-500 px-4 py-3'}>
-            Check out our latest product!
+            {t('home.check-out')}
           </Text>
           <View className={'h-64'}>
             <CustomCarousel
@@ -154,19 +153,19 @@ export default function Home() {
             />
           </View>
           <ListView
-            title={'Hot Deals 🔥'}
+            title={t('home.hot-deals')}
             data={hotDealData}
             limitDisplay={ITEMS_PER_LIST}
             idValue={1}
           />
           <ListView
-            title={'Upcoming Event 🥇'}
+            title={t('home.upcoming-event')}
             data={eventData}
             limitDisplay={ITEMS_PER_LIST}
             idValue={2}
           />
           <ListView
-            title={'New Arrival 📦'}
+            title={t('home.new-arrival')}
             data={newArrivalData}
             limitDisplay={ITEMS_PER_LIST}
             idValue={3}
