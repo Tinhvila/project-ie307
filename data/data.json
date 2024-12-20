@@ -1191,6 +1191,29 @@
         "labubu"
       ],
       "id": 23
+    },
+    {
+      "firstName": "Tuan",
+      "lastName": "Tran",
+      "username": "Tuan",
+      "email": "anhtuantran22122003@gmail.com",
+      "password": "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
+      "address": "Ho Chi Minh City",
+      "phoneNumber": "0601234567",
+      "cart": [
+        {
+          "id": "5804393d-5f14-4777-a043-7a2fab72f8b1",
+          "name": "Lồng Đèn Labubu POPMART The Monster Let's Have Fun Together Series-Night Light [HÀNG CHÍNH HÃNG]",
+          "price": 790000,
+          "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/watermarked-20240822-094137-332563-8-1.jpg?v=1725277303180",
+          "quantity": 3
+        }
+      ],
+      "order": [],
+      "favorite": [],
+      "searchHistory": [],
+      "id": 24,
+      "favorites": []
     }
   ]
 }

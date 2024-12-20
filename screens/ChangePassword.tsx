@@ -8,8 +8,10 @@ import { AuthenticationContext } from '../context/context';
 import fetchUser, { patchUser } from '../api/fetchUser';
 import { comparePassword, hashPassword } from '../utils/hashPassword';
 import { ProfileStackNavigationProp } from '../types/navigation';
+import { useTranslation } from 'react-i18next';
 
 export default function ChangePassword() {
+  const { t } = useTranslation();
   const navigation = useNavigation<ProfileStackNavigationProp>();
   const { id } = React.useContext(AuthenticationContext);
   const [passwordData, setPasswordData] = React.useState({
@@ -79,17 +81,17 @@ export default function ChangePassword() {
           >
             <AntDesignIcon name={'left'} size={20} />
           </TouchableOpacity>
-          <Text className={'text-xl font-bold text-black px-2 py-3'}>Change Password</Text>
+          <Text className={'text-xl font-bold text-black px-2 py-3'}>{t('profile.change-password')}</Text>
         </View>
         <View className={'mx-6 gap-3'}>
           <View>
-            <Text>Current Password</Text>
+            <Text>{t('profile.current-password')}</Text>
             <View className={'flex-row items-center'}>
               <TextInput
                 secureTextEntry={showPassword.oldPassword ? false : true}
                 value={passwordData.oldPassword}
                 onChangeText={(text) => setPasswordData((prev) => ({ ...prev, oldPassword: text }))}
-                placeholder='Current Password'
+                placeholder={t('profile.current-password')}
                 className={'border-2 rounded-xl border-gray-300 w-80 p-3'} />
               <FontAwesome5Icon
                 name={showPassword.oldPassword ? 'eye-slash' : 'eye'}
@@ -101,13 +103,13 @@ export default function ChangePassword() {
             </View>
           </View>
           <View>
-            <Text>Type New Password</Text>
+            <Text>{t('profile.new-password')}</Text>
             <View className={'flex-row items-center'}>
               <TextInput
                 secureTextEntry={showPassword.newPassword ? false : true}
                 value={passwordData.newPassword}
                 onChangeText={(text) => setPasswordData((prev) => ({ ...prev, newPassword: text }))}
-                placeholder='New Password'
+                placeholder={t('profile.new-password')}
                 className={'border-2 rounded-xl border-gray-300 w-80 p-3'} />
               <FontAwesome5Icon
                 name={showPassword.newPassword ? 'eye-slash' : 'eye'}
@@ -119,13 +121,13 @@ export default function ChangePassword() {
             </View>
           </View>
           <View>
-            <Text>Retype New Password</Text>
+            <Text>{t('profile.retype-new-password')}</Text>
             <View className='flex-row items-center'>
               <TextInput
                 secureTextEntry={showPassword.retypeNewPassword ? false : true}
                 value={passwordData.retypeNewPassword}
                 onChangeText={(text) => setPasswordData((prev) => ({ ...prev, retypeNewPassword: text }))}
-                placeholder='Retype New Password'
+                placeholder={t('profile.retype-new-password')}
                 className={'border-2 rounded-xl border-gray-300 w-80 p-3'} />
               <FontAwesome5Icon
                 name={showPassword.retypeNewPassword ? 'eye-slash' : 'eye'}
@@ -139,7 +141,7 @@ export default function ChangePassword() {
           <TouchableOpacity
             onPress={handleConfirm}
             className={'bg-black items-center rounded-lg mt-5'}>
-            <Text className={'text-white p-3 font-bold'}>Confirm</Text>
+            <Text className={'text-white p-3 font-bold'}>{t('button.confirm')}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

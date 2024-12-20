@@ -1,5 +1,5 @@
-import { ItemProps } from '../types/types';
-import { API } from './fetchIp';
+import { ItemProps } from "../types/types";
+import { API } from "./fetchIp";
 
 interface Total_Product {
   data: ItemProps[];
@@ -7,6 +7,13 @@ interface Total_Product {
 }
 
 // const API = process.env.EXPO_PUBLIC_API_URL_3G;
+
+const normalizeString = (str: string) => {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+};
 
 export default async function fetchProductData(
   params: {
@@ -53,7 +60,8 @@ export default async function fetchProductData(
     }
 
     if (params.filterTitle) {
-      queryParams.append("title_like", params.filterTitle);
+      const filteredTitle = normalizeString(params.filterTitle.toLowerCase());
+      queryParams.append("title_like", filteredTitle);
     }
 
     if (params.filterId) {
@@ -73,9 +81,11 @@ export default async function fetchProductData(
 
     return { data, totalCount: total };
   } catch (error) {
-    console.error('Error fetching product data:', error);
+    console.error("Error fetching product data:", error);
     return { data: [], totalCount: null };
   }
 }
+
+export function filterProductData() {}
 
 export { fetchProductData };

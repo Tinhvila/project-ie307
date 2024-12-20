@@ -14,10 +14,13 @@ export default function Profile() {
   const { setIsAuthenticated, setId } = React.useContext(AuthenticationContext);
   const { userData } = React.useContext(AuthenticationContext);
   const navigation = useNavigation<ProfileStackNavigationProp>();
+  const { setLanguage } = React.useContext(AuthenticationContext);
   const changeLanguage = () => {
     const newLanguage = i18n.language === 'en' ? 'vi' : 'en';
     i18n.changeLanguage(newLanguage);
+    setLanguage(newLanguage === 'en' ? 'English' : 'Vietnamese');
   };
+
 
   const handleLogout = () => {
     setId('');
@@ -69,14 +72,14 @@ export default function Profile() {
             className={'justify-center items-center bg-gray-300 p-5 m-1'}
           >
             <AntDesignIcon name="tagso" size={32} />
-            <Text className={'mt-1 text-lg'}>Order</Text>
+            <Text className={'mt-1 text-lg'}>{t('profile.order-title')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={changeLanguage}
             className={'justify-center items-center bg-gray-300 p-5 m-1'}
           >
             <IoniconsIcon name="language" size={32} />
-            <Text className={'mt-1 text-lg'}>Change language</Text>
+            <Text className={'mt-1 text-lg'}>{t('profile.change-language')}</Text>
           </TouchableOpacity>
         </View>
         <View className={'w-[50%]'}>
@@ -85,14 +88,14 @@ export default function Profile() {
             className={'justify-center items-center bg-gray-300 p-5 m-1'}
           >
             <AntDesignIcon name="edit" size={32} />
-            <Text className={'mt-1 text-lg'}>Edit Profile</Text>
+            <Text className={'mt-1 text-lg'}>{t('profile.edit-profile')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleLogout}
             className={'justify-center items-center bg-gray-300 p-5 m-1'}
           >
             <AntDesignIcon name="logout" size={32} />
-            <Text className={'mt-1 text-lg'}>Log Out</Text>
+            <Text className={'mt-1 text-lg'}>{t('profile.log-out')}</Text>
           </TouchableOpacity>
         </View>
       </View>

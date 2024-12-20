@@ -9,11 +9,9 @@ import { AuthenticationContext } from '../context/context';
 import fetchUser, { patchUser } from '../api/fetchUser';
 import fetchProductData from '../api/fetchProductData';
 import { SearchStackNavigationProp } from '../types/navigation';
+import { SearchHistory } from '../types/types';
+import { useDebounce } from 'use-debounce';
 
-interface SearchProp {
-  value: string,
-  id?: string,
-}
 
 export default function Search() {
   const { t } = useTranslation();
@@ -22,8 +20,14 @@ export default function Search() {
   const { id: userId } = React.useContext(AuthenticationContext);
   const [searchText, setSearchText] = React.useState('');
   const [loadSearch, setLoadSearch] = React.useState(true);
-  const [searchData, setSearchData] = React.useState<SearchProp[]>([]);
-  const [historyData, setHistoryData] = React.useState<string[]>([]);
+  const [searchData, setSearchData] = React.useState<SearchHistory[]>([]);
+  const [historyData, setHistoryData] = React.useState<SearchHistory[]>([]);
+
+  const [debouncedSearchText] = useDebounce(searchText, 500);
+
+  const normalizeString = (str: string) => {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -47,7 +51,7 @@ export default function Search() {
       if (searchText !== '') {
         // When searchText has a value, filter history data
         const filteredHistoryData = historyData?.filter((value) =>
-          value.toLowerCase().includes(searchText.toLowerCase())
+          value.title.toLowerCase().includes(searchText.toLowerCase())
         );
         setHistoryData(filteredHistoryData || []);
       } else {
@@ -59,25 +63,33 @@ export default function Search() {
 
   React.useEffect(() => {
     const filterSearch = async () => {
-      const params = { filterTitle: searchText };
+      const filteredSearchText = normalizeString(debouncedSearchText.toLowerCase());
+      const params = { filterTitle: filteredSearchText };
       const resultData = await fetchProductData(params);
-
+      console.log(filteredSearchText);
       // Search Data
       if (resultData.data && resultData.data.length > 0) {
-        let searchData = [] as SearchProp[];
+        let searchData = [] as SearchHistory[];
         resultData.data.forEach((element) => {
-          if (element.title) {
-            searchData.push({ value: element.title, id: element.id });
+          const normalizeedTitle = normalizeString(element.title.toLowerCase());
+
+          if (normalizeedTitle.includes(filteredSearchText)) {
+            searchData.push({ title: element.title, id: element.id });
           }
         });
         setSearchData(searchData ? searchData : []);
+      }
+      else {
+        setSearchData([]);
       }
     };
 
     loadHistoryData();
     filterSearch();
-
-  }, [searchText]); // Runs whenever searchText changes
+    if (debouncedSearchText) {
+      filterSearch();
+    }
+  }, [debouncedSearchText]); // Runs whenever searchText changes
 
   // Handle the filter search
   const handleFilterSearch = async () => {
@@ -86,17 +98,20 @@ export default function Search() {
     // Get the history data from the user first
     const userData = await fetchUser(params);
     if (userData && userData.length > 0) {
-      const updatedSearchHistory = userData[0].searchHistory
-        ? userData[0].searchHistory.includes(searchText)
-          ? userData[0].searchHistory
-          : [...userData[0].searchHistory, searchText]
-        : [searchText];
+      const currentSearchHistory = userData[0].searchHistory || [];
+
+      // Check if searchText exists in the titles of searchHistory using some()
+      const updatedSearchHistory = currentSearchHistory.some((entry) => entry.title === searchText)
+        ? currentSearchHistory
+        : [...currentSearchHistory, { title: searchText }];
+
+      // Patch the updated search history
       const result = await patchUser(String(userId), {
         searchHistory: updatedSearchHistory,
       });
+      navigation.navigate('ItemsListScreen', { value: searchText });
     }
-    navigation.navigate('ItemsListScreen', { value: searchText });
-  };
+  }
 
   // Handle the value search
   const handleValueSearch = async (value: string, id?: string) => {
@@ -105,11 +120,13 @@ export default function Search() {
     // Get the history data from the user first
     const userData = await fetchUser(params);
     if (userData && userData.length > 0) {
-      const updatedSearchHistory = userData[0].searchHistory
-        ? userData[0].searchHistory.includes(value)
-          ? userData[0].searchHistory
-          : [...userData[0].searchHistory, value]
-        : [value];
+      const currentSearchHistory = userData[0].searchHistory || [];
+
+      const updatedSearchHistory = currentSearchHistory.some(
+        (entry) => entry.title === value || entry.id === id
+      )
+        ? currentSearchHistory
+        : [...currentSearchHistory, { title: value, id }];
 
       const result = await patchUser(String(userId), {
         searchHistory: updatedSearchHistory,
@@ -123,7 +140,7 @@ export default function Search() {
 
     const userData = await fetchUser(params);
     if (userData && userData.length > 0) {
-      const updatedSearchHistory = userData[0].searchHistory?.filter((element) => element !== value);
+      const updatedSearchHistory = userData[0].searchHistory?.filter((element) => element.title !== value);
       const result = await patchUser(String(userId), {
         searchHistory: updatedSearchHistory,
       });
@@ -154,14 +171,14 @@ export default function Search() {
           <ScrollView>
             {historyData.slice(0, 20).slice().reverse().map((value, index) => (
               <TouchableOpacity
-                onPress={() => handleValueSearch(value)}
+                onPress={() => handleValueSearch(value.title, value.id)}
                 key={index}
                 className={'flex-row items-center gap-3 p-5 border-b-black border-b'}
               >
                 <MaterialIcons name={'history'} size={24} />
-                <Text className={'text-xl line-clamp-1 pr-5'}>{value}</Text>
+                <Text className={'text-xl line-clamp-1 pr-5'}>{value.title}</Text>
                 <TouchableOpacity
-                  onPress={() => handleDeleteHistory(value)}
+                  onPress={() => handleDeleteHistory(value.title)}
                   className={'absolute right-0 bg-gray-100 p-2'}>
                   <MaterialIcons name={'close'} size={24} />
                 </TouchableOpacity>
@@ -170,11 +187,11 @@ export default function Search() {
             }
             {searchText !== '' && searchData.slice(0, 10).map((value, index) =>
             (<TouchableOpacity
-              onPress={() => handleValueSearch(value.value, value.id)}
+              onPress={() => handleValueSearch(value.title, value.id)}
               key={index}
               className={'flex-row items-center gap-3 p-5 border-b-black border-b'}>
               <MaterialIcons name={'search'} size={24} />
-              <Text className={'text-xl line-clamp-1 pr-5'}>{value.value}</Text>
+              <Text className={'text-xl line-clamp-1 pr-5'}>{value.title}</Text>
             </TouchableOpacity>))
             }
           </ScrollView>

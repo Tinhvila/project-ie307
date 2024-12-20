@@ -8,8 +8,10 @@ import { AuthenticationStackNavigationProp } from '../types/navigation';
 import { AuthenticationContext } from '../context/context';
 import fetchUser from '../api/fetchUser';
 import { comparePassword } from '../utils/hashPassword';
+import { useTranslation } from 'react-i18next';
 
 export default function Login() {
+  const { t } = useTranslation();
   const navigation = useNavigation<AuthenticationStackNavigationProp>();
   const [loginAuthen, setLoginAuthen] = React.useState({
     email: '',
@@ -47,7 +49,6 @@ export default function Login() {
     }
 
     // If authentication is valid, allows the user to sign in
-    Alert.alert("Login successfully", "You have logged in successfully.");
     setId(checkData[0].id);
     setUserData({
       username: checkData[0].username,
@@ -69,7 +70,7 @@ export default function Login() {
               className={'w-52 h-24 object-contain'}
               source={require('../assets/image/logo_2.png')}
             />
-            <Text className={'text-2xl font-medium'}>Login</Text>
+            <Text className={'text-2xl font-medium'}>{t('authentication.login')}</Text>
             <View className={'mt-3 items-center justify-center'}>
               <AntDesignIcon
                 name='mail'
@@ -82,6 +83,8 @@ export default function Login() {
                 placeholder='Email'
                 value={loginAuthen.email}
                 onChangeText={(text) => setLoginAuthen(prev => ({ ...prev, email: text }))}
+                autoComplete='email'
+                inputMode='email'
               />
             </View>
             <View className={'mt-3 items-center justify-center'}>
@@ -93,7 +96,7 @@ export default function Login() {
               />
               <TextInput
                 className={'border-2 rounded-xl border-gray-300 w-80 pl-[30px] pr-2 py-3'}
-                placeholder='Password'
+                placeholder={t('authentication.password')}
                 secureTextEntry={revealPassword ? false : true}
                 value={loginAuthen.password}
                 onChangeText={(text) => setLoginAuthen(prev => ({ ...prev, password: text }))}
@@ -107,21 +110,21 @@ export default function Login() {
               />
             </View>
             <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-              <Text className={'text-right w-80 mt-2 text-blue-500'}>Forgot password?</Text>
+              <Text className={'text-right w-80 mt-2 text-blue-500'}>{t('authentication.forgot-password')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className={'bg-[#0d3092] mt-5 py-3 px-10 rounded-full'}
               onPress={handleLogin}
             >
-              <Text className={'text-white text-xl font-bold'}>SIGN IN</Text>
+              <Text className={'text-white text-xl font-bold'}>{t('authentication.sign-in-upper')}</Text>
             </TouchableOpacity>
-            <Text className={'text-base mt-5'}>Don't have an account?
+            <Text className={'text-base mt-5'}>{t('authentication.no-account')}
               <Text
                 className={'text-blue-500 font-bold'}
                 onPress={() => {
                   navigation.replace('SignUp')
                 }}
-              > Sign Up
+              > {t('authentication.sign-up')}
               </Text>
             </Text>
           </View>

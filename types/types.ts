@@ -17,6 +17,10 @@ export interface ItemProps {
   isUpcomingEvent?: boolean;
 }
 
+export interface SearchHistory {
+  id?: string;
+  title: string;
+}
 export interface UserProps {
   id: string;
   username: string;
@@ -41,5 +45,5 @@ export interface UserProps {
     }
   ];
   favorite?: string[]; //Item id as string
-  searchHistory?: string[];
+  searchHistory?: SearchHistory[];
 }

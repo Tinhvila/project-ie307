@@ -21,6 +21,7 @@ export default function App() {
     phoneNumber: '',
     address: '',
   });
+  const [language, setLanguage] = React.useState<'English' | 'Vietnamese'>('English');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,10 +46,12 @@ export default function App() {
           value={{
             id,
             userData,
+            language,
             isAuthenticated,
             setIsAuthenticated,
             setId,
             setUserData,
+            setLanguage
           }}
         >
           <NavigationContainer>
