@@ -696,15 +696,7 @@
       "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
       "address": "Khu phố 6 linh trung thủ đức",
       "phoneNumber": "015466594",
-      "cart": [
-        {
-          "id": "91ea0339-8d9c-4331-987e-322e1731077f",
-          "name": "Molly Van Gogh 400% - POPMART Royal Molly Almond Blossom Van Gogh 400% Figure Mucha Zodiac Art Toy [CHÍNH HÃNG]",
-          "price": 15000000,
-          "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/140-2-224c9d3b-0c52-4c94-8142-9e.jpg?v=1730803706367",
-          "quantity": 1
-        }
-      ],
+      "cart": [],
       "order": [
         {
           "items": [
@@ -732,10 +724,107 @@
           },
           "status": "pending",
           "createdAt": "2024-12-18T05:36:41.966Z"
+        },
+        {
+          "items": [
+            {
+              "id": "91ea0339-8d9c-4331-987e-322e1731077f",
+              "name": "Molly Van Gogh 400% - POPMART Royal Molly Almond Blossom Van Gogh 400% Figure Mucha Zodiac Art Toy [CHÍNH HÃNG]",
+              "price": 15000000,
+              "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/140-2-224c9d3b-0c52-4c94-8142-9e.jpg?v=1730803706367",
+              "quantity": 1
+            },
+            {
+              "id": "a52576f5-87ec-411a-a8b9-7598923e4862",
+              "name": "Labubu Secret V1 Chestnut Cocoa - Size 17cm Móc Khóa [HÀNG CHÍNH HÃNG] Gấu Bông Art Toy",
+              "price": 3600000,
+              "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/snapinsta-app-440326834-17910255983950145-8526382840710474974-n-1080.jpg?v=1723021971137",
+              "quantity": 1
+            }
+          ],
+          "total": 20118000,
+          "paymentMethod": "cod",
+          "shippingDetails": {
+            "name": "Phạm Đăng Tỉnh",
+            "phone": "015466594",
+            "address": "Khu phố 6 linh trung thủ đức"
+          },
+          "status": "pending",
+          "createdAt": "2024-12-23T00:21:27.101Z"
+        },
+        {
+          "items": [
+            {
+              "id": "91ea0339-8d9c-4331-987e-322e1731077f",
+              "name": "Molly Van Gogh 400% - POPMART Royal Molly Almond Blossom Van Gogh 400% Figure Mucha Zodiac Art Toy [CHÍNH HÃNG]",
+              "price": 15000000,
+              "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/140-2-224c9d3b-0c52-4c94-8142-9e.jpg?v=1730803706367",
+              "quantity": 1
+            }
+          ],
+          "total": 16230000,
+          "paymentMethod": "cod",
+          "shippingDetails": {
+            "name": "Phạm Đăng Tỉnh",
+            "phone": "015466594",
+            "address": "Khu phố 6 linh trung thủ đức"
+          },
+          "status": "pending",
+          "createdAt": "2024-12-23T00:26:57.694Z"
+        },
+        {
+          "items": [
+            {
+              "id": "91ea0339-8d9c-4331-987e-322e1731077f",
+              "name": "Molly Van Gogh 400% - POPMART Royal Molly Almond Blossom Van Gogh 400% Figure Mucha Zodiac Art Toy [CHÍNH HÃNG]",
+              "price": 15000000,
+              "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/140-2-224c9d3b-0c52-4c94-8142-9e.jpg?v=1730803706367",
+              "quantity": 1
+            }
+          ],
+          "total": 16230000,
+          "paymentMethod": "cod",
+          "shippingDetails": {
+            "name": "Phạm Đăng Tỉnh",
+            "phone": "015466594",
+            "address": "Khu phố 6 linh trung thủ đức"
+          },
+          "status": "pending",
+          "createdAt": "2024-12-23T00:27:26.318Z"
         }
       ],
-      "favorite": [],
-      "searchHistory": [],
+      "favorite": [
+        {
+          "id": "91ea0339-8d9c-4331-987e-322e1731077f",
+          "name": "Molly Van Gogh 400% - POPMART Royal Molly Almond Blossom Van Gogh 400% Figure Mucha Zodiac Art Toy [CHÍNH HÃNG]",
+          "price": 15000000,
+          "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/140-2-224c9d3b-0c52-4c94-8142-9e.jpg?v=1730803706367"
+        },
+        {
+          "id": "e512f0d7-53c7-4f9b-975e-fbb92db78e80",
+          "name": "Labubu Green Grape Xanh Lá Size bé 17cm - Gấu Bông Art Toy [HÀNG CHÍNH HÃNG] Pop Mart",
+          "price": 950000,
+          "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/z5602714048306-0fd4849d4be6bf2fbf7d3d385d280dc4.jpg?v=1722763576213"
+        },
+        {
+          "id": "0e80480d-e36e-48a9-941a-e76017c654c0",
+          "name": "Labubu Lychee Berry - Màu Hồng - Size bé 17cm - Gấu Bông Art Toy [HÀNG CHÍNH HÃNG] Pop Mart",
+          "price": 950000,
+          "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/z5602714009604-c605bbb3652a92ecda77190788432c62.jpg?v=1722533210033"
+        },
+        {
+          "id": "6f1938d1-76ec-477d-95ad-41c954a1f0bd",
+          "name": "Labubu Flip With Me V2 - Size 40cm - Gấu Bông Art Toy [HÀNG CHÍNH HÃNG] POP MART",
+          "price": 3500000,
+          "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/z5694615634546-40ef32812307cfd099c48da0ee262b36.jpg?v=1722670247040"
+        }
+      ],
+      "searchHistory": [
+        {
+          "title": "Labubu Green Grape Xanh Lá Size bé 17cm - Gấu Bông Art Toy [HÀNG CHÍNH HÃNG] Pop Mart",
+          "id": "e512f0d7-53c7-4f9b-975e-fbb92db78e80"
+        }
+      ],
       "id": 22,
       "favorites": [
         {
@@ -1214,6 +1303,28 @@
       "searchHistory": [],
       "id": 24,
       "favorites": []
+    },
+    {
+      "firstName": "Tuấn",
+      "lastName": "Trần",
+      "username": "Tinhvila",
+      "email": "ptinh2402@gmail.com",
+      "password": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      "address": "Thu Duc HCM",
+      "phoneNumber": "0926686466",
+      "cart": [
+        {
+          "id": "a52576f5-87ec-411a-a8b9-7598923e4862",
+          "name": "Labubu Secret V1 Chestnut Cocoa - Size 17cm Móc Khóa [HÀNG CHÍNH HÃNG] Gấu Bông Art Toy",
+          "price": 3600000,
+          "image": "https://bizweb.dktcdn.net/thumb/large/100/467/909/products/snapinsta-app-440326834-17910255983950145-8526382840710474974-n-1080.jpg?v=1723021971137",
+          "quantity": 1
+        }
+      ],
+      "order": [],
+      "favorite": [],
+      "searchHistory": [],
+      "id": 25
     }
   ]
 }

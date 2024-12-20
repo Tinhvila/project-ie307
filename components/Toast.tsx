@@ -42,7 +42,7 @@ const Toast: React.FC<ToastProps> = ({
 
   return (
     <Animated.View
-      className="absolute bottom-32 self-center px-6 py-3 bg-gray-700 rounded-lg z-[10000]"
+      className="absolute self-center top-32 px-6 py-3 bg-gray-700 rounded-lg z-[10000]"
       style={{
         opacity: fadeAnim,
         shadowColor: '#000',

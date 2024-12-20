@@ -27,15 +27,12 @@ const ProductItem: React.FC<{ props: ItemProps }> = ({ props }) => {
   const navigation = useNavigation<ItemDetailsNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useContext(AuthenticationContext);
-  const { items: cartItems, loading } = useSelector(
-    (state: RootState) => state.cart
-  );
+  const { items: cartItems } = useSelector((state: RootState) => state.cart);
   const { items: favoriteItems } = useSelector(
     (state: RootState) => state.favorite
   );
   const isInCart = cartItems.some((item) => item.id === props.id);
   const isInFavorite = favoriteItems.some((item) => item.id === props.id);
-  // const isInFavorite = true;
 
   const { showToast } = useToast();
   const handleAddToCart = async () => {

@@ -1,5 +1,5 @@
-export const API = `http://192.168.2.24:3000/products`;
-export const FETCH_USER_API = `http://192.168.2.24:3000/users`;
+export const API = `http://192.168.2.7:3000/products`;
+export const FETCH_USER_API = `http://192.168.2.7:3000/users`;
 // ở nhà
 
 // export const API = `http://10.100.9.42:3000/products`;

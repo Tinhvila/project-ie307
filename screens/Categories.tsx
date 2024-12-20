@@ -29,17 +29,6 @@ import { RootState } from '../redux/store';
 
 const brand = ['Pop Mart', 'The Monsters', 'Vinyl Toys', 'Collaborations'];
 
-const tag = [
-  { label: 'Hot Deal', value: 1 },
-  { label: 'Upcoming Events', value: 2 },
-  { label: 'New Arrival', value: 3 },
-];
-
-const priceLabel = [
-  { label: 'Giá tăng dần', value: 'asc' },
-  { label: 'Giá giảm dần', value: 'desc' },
-];
-
 export default function Categories({ route }: { route: any }) {
   const { t } = useTranslation();
   const [dataDisplay, setDataDisplay] = useState<ItemProps[]>([]);
@@ -55,6 +44,17 @@ export default function Categories({ route }: { route: any }) {
   const [ratingNumber, setRatingNumber] = useState<RatingCount[]>([]);
   const [ratingSelected, setRatingSelected] = useState<number[]>([]);
   const [priceRange, setPriceRange] = useState<number[]>([]);
+
+  const tag = [
+    { label: t('categories.hot-deals'), value: 1 },
+    { label: t('categories.upcoming-event'), value: 2 },
+    { label: t('categories.new-arrival'), value: 3 },
+  ];
+
+  const priceLabel = [
+    { label: t('categories.sort-by-price-ascending'), value: 'asc' },
+    { label: t('categories.sort-by-price-descending'), value: 'desc' },
+  ];
 
   const [filteredProducts, setFilteredProducts] = useState<ItemProps[]>([]);
   const [visibleProductCount, setVisibleProductCount] = useState(20);
@@ -242,7 +242,9 @@ export default function Categories({ route }: { route: any }) {
           </View>
           <View>
             <View className="px-3 border-b-gray-200 border-b mt-3">
-              <Text className="text-normal font-medium mb-3">Brand</Text>
+              <Text className="text-normal font-medium mb-3">
+                {t('categories.brand')}
+              </Text>
               <View className="flex flex-row flex-wrap gap-3 mb-3">
                 {brand.map((item, index) => (
                   <Pressable
@@ -264,7 +266,9 @@ export default function Categories({ route }: { route: any }) {
               </View>
             </View>
             <View className="px-3 border-b-gray-200 border-b mt-3">
-              <Text className="text-normal font-medium mb-3">Price</Text>
+              <Text className="text-normal font-medium mb-3">
+                {t('categories.price')}
+              </Text>
 
               <SliderPrice
                 data={data}
@@ -273,7 +277,9 @@ export default function Categories({ route }: { route: any }) {
               />
             </View>
             <View className="px-3 border-b-gray-200 border-b mt-3">
-              <Text className="text-normal font-medium mb-3">Rating</Text>
+              <Text className="text-normal font-medium mb-3">
+                {t('categories.rating')}
+              </Text>
 
               <Rating
                 ratingNumber={ratingNumber}
@@ -292,7 +298,7 @@ export default function Categories({ route }: { route: any }) {
                   className={`px-4 py-2 text-base font-medium
             text-white`}
                 >
-                  Reset filter
+                  {t('button.reset-filter')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -331,7 +337,7 @@ export default function Categories({ route }: { route: any }) {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder="Sắp xếp theo giá"
+          placeholder={t('categories.sort-by-price')}
           value={priceSort}
           onFocus={() => setIsFocusPriceSort(true)}
           onBlur={() => setIsFocusPriceSort(false)}
@@ -370,7 +376,9 @@ export default function Categories({ route }: { route: any }) {
             source={require('../assets/image/8062127.webp')}
             className="w-48 h-48"
           />
-          <View className="px-3 border-b-gray-200 w-[50%]  mt-3">
+          <Text>{t('categories.empty-message')}</Text>
+
+          <View className="px-3 border-b-gray-200 w-[50%] mt-3">
             <TouchableOpacity
               onPress={resetFilter}
               className={`mt-2 rounded-md border-2 border-black items-center
@@ -380,7 +388,7 @@ export default function Categories({ route }: { route: any }) {
                 className={`px-4 py-2 text-base font-medium
             text-white`}
               >
-                Reset filter
+                {t('button.reset-filter')}
               </Text>
             </TouchableOpacity>
           </View>
