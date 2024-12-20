@@ -1,10 +1,12 @@
-import { ItemProps } from "../types/types";
-import { API } from "./fetchIp";
+import { ItemProps } from '../types/types';
+import { API } from './fetchIp';
 
 interface Total_Product {
   data: ItemProps[];
   totalCount: number | null;
 }
+
+// const API = process.env.EXPO_PUBLIC_API_URL_3G;
 
 export default async function fetchProductData(
   params: {
@@ -71,7 +73,7 @@ export default async function fetchProductData(
 
     return { data, totalCount: total };
   } catch (error) {
-    console.error("Error fetching product data:", error);
+    console.error('Error fetching product data:', error);
     return { data: [], totalCount: null };
   }
 }

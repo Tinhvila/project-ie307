@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { formatPrice } from '../utils/formatPrice';
+import { useNavigation } from '@react-navigation/native';
+import { CartStackNavigationProp } from '../types/navigation';
 
 interface Checkout {
   subtotal: number;
@@ -14,11 +16,11 @@ export default function Checkout({
   vatRate = 0.08,
 }: Checkout) {
   const vatAmount = subtotal * vatRate;
-
+  const navigation = useNavigation<CartStackNavigationProp>();
   const total = subtotal + shippingFee + vatAmount;
 
   return (
-    <View className="bg-white rounded-t-xl shadow-md p-4 sticky bottom-20">
+    <View className="bg-white rounded-t-xl shadow-md p-4">
       <View className="border-b border-gray-200 pb-2 mb-2">
         <View className="flex-row justify-between mb-1">
           <Text className="text-gray-600">Subtotal</Text>
@@ -45,7 +47,7 @@ export default function Checkout({
 
       <TouchableOpacity
         className="bg-black rounded-lg py-3 items-center"
-        onPress={() => console.log('Proceed to Checkout')}
+        onPress={() => navigation.navigate('Payment')}
       >
         <Text className="text-white text-base font-bold">
           Proceed to Checkout

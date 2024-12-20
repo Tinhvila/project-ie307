@@ -1,4 +1,5 @@
 // Item details for item props
+
 export interface ItemProps {
   id: string;
   image?: string;
@@ -13,6 +14,7 @@ export interface ItemProps {
   subCategory?: string;
   isNewProduct?: boolean;
   isHotDeal?: boolean;
+  isUpcomingEvent?: boolean;
 }
 
 export interface UserProps {
@@ -26,12 +28,11 @@ export interface UserProps {
   phoneNumber: string;
   cart?: [
     {
-      id: string; //Id from ItemProps
-      image: string;
+      id: string;
       title: string;
+      image: string;
+      price: number;
       quantity: number;
-      initialprice: number; // Check from the initialPrice and discountPrice like: (discountPrice ? discountPrice : initialPrice)
-      totalPrice: number;
     }
   ];
   order?: [

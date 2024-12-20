@@ -16,5 +16,23 @@
       "premium_delivery": "Vận chuyển nhanh",
       "cost_delivery": "Vận chuyển tính phí"
     }
+  },
+  "messages": {
+    "add-to-cart": "Thêm vào giỏ hàng thành công",
+    "remove-from-cart": "Xóa khỏi giỏ hàng thành công",
+    "clear-cart": "Đã xóa tất cả sản phẩm",
+    "add-to-favorite": "Đã thêm vào danh sách yêu thích",
+    "remove-to-favorite": "Đã xóa khỏi danh sách yêu thích",
+    "clear-favorite": "Đã xóa toàn bộ danh sách yêu thích"
+  },
+  "alert": {
+    "confirm": "Xác nhận",
+    "no": "Không",
+    "yes": "Có",
+    "clear-cart": "Bạn có chắc muốn xóa tất cả sản phẩm trong giỏ hàng?"
+  },
+  "cart": {
+    "clear-cart": "Xóa giỏ hàng",
+    "cart-empty-message": "Giỏ hàng của bạn đang trống. Hãy bắt đầu mua sắm!"
   }
 }

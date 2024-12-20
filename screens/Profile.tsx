@@ -24,29 +24,41 @@ export default function Profile() {
     setIsAuthenticated(false);
   };
 
-
   return (
     <SafeAreaView className="flex-1">
-      <Text className="text-xl font-bold text-black px-2 py-3">{t('main.profile')}</Text>
+      <Text className="text-xl font-bold text-black px-2 py-3">
+        {t('main.profile')}
+      </Text>
       <View className="bg-gray-200 w-full p-3">
         <View className={'flex-row items-center gap-3'}>
-          <View className={'rounded-full bg-gray-400 w-24 h-24 items-center justify-center'}>
-            <Text className={'font-bold text-5xl'}>{userData.username.at(0)?.toUpperCase()}</Text>
+          <View
+            className={
+              'rounded-full bg-gray-400 w-24 h-24 items-center justify-center'
+            }
+          >
+            <Text className={'font-bold text-5xl'}>
+              {userData.username.at(0)?.toUpperCase()}
+            </Text>
           </View>
           <View>
-            <Text className={'text-2xl font-bold'}>{`${userData.firstName} ${userData.lastName}`}</Text>
+            <Text
+              className={'text-2xl font-bold'}
+            >{`${userData.firstName} ${userData.lastName}`}</Text>
             <Text className={'text-base'}>({userData.username})</Text>
           </View>
         </View>
         <View className={'px-3 py-3'}>
           <Text className={'text-base'}>
-            <AntDesignIcon name='mail' size={20} color={'black'} /> {userData.email}
+            <AntDesignIcon name="mail" size={20} color={'black'} />{' '}
+            {userData.email}
           </Text>
           <Text className={'text-base'}>
-            <AntDesignIcon name='phone' size={20} color={'black'} /> {userData.phoneNumber}
+            <AntDesignIcon name="phone" size={20} color={'black'} />{' '}
+            {userData.phoneNumber}
           </Text>
           <Text className={'text-base'}>
-            <AntDesignIcon name='home' size={20} color={'black'} /> {userData.address}
+            <AntDesignIcon name="home" size={20} color={'black'} />{' '}
+            {userData.address}
           </Text>
         </View>
       </View>
@@ -54,13 +66,15 @@ export default function Profile() {
         <View className={'w-[50%]'}>
           <TouchableOpacity
             onPress={() => navigation.navigate('Order')}
-            className={'justify-center items-center bg-gray-300 p-5 m-1'}>
+            className={'justify-center items-center bg-gray-300 p-5 m-1'}
+          >
             <AntDesignIcon name="tagso" size={32} />
             <Text className={'mt-1 text-lg'}>Order</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={changeLanguage}
-            className={'justify-center items-center bg-gray-300 p-5 m-1'}>
+            className={'justify-center items-center bg-gray-300 p-5 m-1'}
+          >
             <IoniconsIcon name="language" size={32} />
             <Text className={'mt-1 text-lg'}>Change language</Text>
           </TouchableOpacity>
@@ -68,13 +82,15 @@ export default function Profile() {
         <View className={'w-[50%]'}>
           <TouchableOpacity
             onPress={() => navigation.navigate('EditProfile')}
-            className={'justify-center items-center bg-gray-300 p-5 m-1'}>
+            className={'justify-center items-center bg-gray-300 p-5 m-1'}
+          >
             <AntDesignIcon name="edit" size={32} />
             <Text className={'mt-1 text-lg'}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleLogout}
-            className={'justify-center items-center bg-gray-300 p-5 m-1'}>
+            className={'justify-center items-center bg-gray-300 p-5 m-1'}
+          >
             <AntDesignIcon name="logout" size={32} />
             <Text className={'mt-1 text-lg'}>Log Out</Text>
           </TouchableOpacity>

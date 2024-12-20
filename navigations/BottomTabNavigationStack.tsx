@@ -9,11 +9,15 @@ import { BottomTabNavigationStackParamList } from '../types/navigation';
 import HomeStackNavigation from './HomeStackNavigation';
 import ProfileStackNavigation from './ProfileStackNavigation';
 import SearchStackScreen from './SearchStackScreen';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import CartStackNavigation from './CartStackNavigation';
 
 const Tab = createBottomTabNavigator<BottomTabNavigationStackParamList>();
 
 export default function BottomTabNavigationStack() {
   const { t } = useTranslation();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   return (
     <Tab.Navigator initialRouteName="HomeStack">
@@ -51,7 +55,11 @@ export default function BottomTabNavigationStack() {
             display: 'none',
           },
           tabBarIcon: ({ focused, color }) => (
-            <View className={`justify-center items-center w-16 h-16 rounded-full top-0 ${focused ? 'bg-blue-400' : 'bg-gray-300'}`}>
+            <View
+              className={`justify-center items-center w-16 h-16 rounded-full top-0 ${
+                focused ? 'bg-blue-400' : 'bg-gray-300'
+              }`}
+            >
               <Icon
                 name="search1"
                 color={focused ? 'white' : 'black'}
@@ -63,8 +71,8 @@ export default function BottomTabNavigationStack() {
         }}
       />
       <Tab.Screen
-        name='Cart'
-        component={Cart}
+        name="CartStack"
+        component={CartStackNavigation}
         options={{
           tabBarLabel: t('main.cart'),
           tabBarIcon: ({ focused, color, size }) => (
@@ -74,8 +82,9 @@ export default function BottomTabNavigationStack() {
               color={focused ? color : 'gray'}
             />
           ),
-          tabBarBadge: 0,
-          headerShown: true,
+          tabBarBadge: cartItems.length,
+          headerShown: false,
+          headerTitleAlign: 'left',
         }}
       />
       <Tab.Screen
