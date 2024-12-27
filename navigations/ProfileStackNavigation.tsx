@@ -5,9 +5,12 @@ import Profile from '../screens/Profile';
 import Order from '../screens/Order';
 import EditProfile from '../screens/EditProfile';
 import ChangePassword from '../screens/ChangePassword';
+import Favorite from '../screens/Favorite';
+import { useTranslation } from 'react-i18next';
 
 const Stack = createNativeStackNavigator();
 export default function ProfileStackNavigation() {
+  const { t } = useTranslation();
   return (
     <Stack.Navigator initialRouteName="Profile">
       <Stack.Screen
@@ -29,6 +32,15 @@ export default function ProfileStackNavigation() {
         name="ChangePassword"
         component={ChangePassword}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Favorite"
+        component={Favorite}
+        options={{
+          headerBackTitle: t('main.profile'),
+          headerTitle: t('main.favorite'),
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   );

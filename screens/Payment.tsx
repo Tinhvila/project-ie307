@@ -18,6 +18,7 @@ import axios from 'axios';
 import { FETCH_USER_API } from '../api/fetchIp';
 import { useDispatch } from 'react-redux';
 import { clearCart } from '../redux/cartSlice';
+import { useTranslation } from 'react-i18next';
 const apiBaseUrl = FETCH_USER_API;
 const Payment = () => {
   const navigation = useNavigation();
@@ -50,7 +51,7 @@ const Payment = () => {
   const vatRate = 0.08;
   const vatAmount = subtotal * vatRate;
   const total = subtotal + shippingFee + vatAmount;
-
+  const { t } = useTranslation();
   // Validation Functions
   const validateCardNumber = (number: string) => {
     // Remove spaces and dashes
@@ -79,22 +80,34 @@ const Payment = () => {
   const handlePlaceOrder = async () => {
     // Validation checks
     if (!name || !phone || !address || !paymentMethod) {
-      Alert.alert('Error', 'Please fill in all required fields');
+      Alert.alert(
+        t('payment.validation_error.title'),
+        t('payment.validation_error.message')
+      );
       return;
     }
 
     // Credit card validation (if applicable)
     if (paymentMethod === 'credit') {
       if (!validateCardNumber(cardNumber)) {
-        Alert.alert('Error', 'Invalid card number');
+        Alert.alert(
+          t('payment.card_error.invalid_number.title'),
+          t('payment.card_error.invalid_number.message')
+        );
         return;
       }
       if (!validateExpiryDate(expiryDate)) {
-        Alert.alert('Error', 'Invalid expiry date');
+        Alert.alert(
+          t('payment.card_error.invalid_expiry_date.title'),
+          t('payment.card_error.invalid_expiry_date.message')
+        );
         return;
       }
       if (!validateCVV(cvv)) {
-        Alert.alert('Error', 'Invalid CVV');
+        Alert.alert(
+          t('payment.card_error.invalid_cvv.title'),
+          t('payment.card_error.invalid_cvv.message')
+        );
         return;
       }
     }
@@ -137,35 +150,17 @@ const Payment = () => {
       dispatch(clearCart(id));
       navigation.dispatch(
         CommonActions.reset({
-          index: 1, // Set index to point to the second route (Order screen in ProfileStack)
-          routes: [
-            { name: 'CartStack', params: { screen: 'Cart' } }, // Reset CartStack to Cart
-            { name: 'ProfileStack', params: { screen: 'Order' } }, // Navigate to Order
-          ],
+          index: 1,
+          routes: [{ name: 'CartStack', params: { screen: 'Cart' } }],
         })
       );
-      // 4. Show success message and navigate
-      Alert.alert('Order Placed', 'Your order has been successfully placed!', [
-        {
-          text: 'OK',
-          // onPress: () => {
-          //   navigation.dispatch(
-          //     CommonActions.reset({
-          //       routes: [
-          //         { name: 'ProfileStack' },
-          //         { name: 'Order' }, // Specify the screen you want to navigate to
-          //       ],
-          //     })
-          //   );
-          //   // navigation.navigate('Order');
-          // },
-        },
-      ]);
 
-      // 3. Clear local cart state
+      Alert.alert(t('payment.success.title'), t('payment.success.message'), [
+        { text: 'OK' },
+      ]);
     } catch (error) {
       console.error('Order placement error:', error);
-      Alert.alert('Error', 'Failed to place order. Please try again.', [
+      Alert.alert(t('payment.failure.title'), t('payment.failure.message'), [
         { text: 'OK' },
       ]);
     }
@@ -192,28 +187,27 @@ const Payment = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="px-4 py-6">
-        <Text className="text-2xl font-bold mb-6">Payment</Text>
+        <Text className="text-2xl font-bold mb-6">{t('payment.title')}</Text>
 
-        {/* Shipping Information - Previous code remains the same */}
         <View className="mb-6">
           <Text className="text-lg font-semibold mb-4">
-            Shipping Information
+            {t('payment.shippingInfo')}
           </Text>
           <TextInput
-            placeholder="Full Name"
+            placeholder={t('payment.fullName')}
             value={name}
             onChangeText={setName}
             className="border border-gray-300 rounded-lg px-4 py-2 mb-3"
           />
           <TextInput
-            placeholder="Phone Number"
+            placeholder={t('payment.phoneNumber')}
             value={phone}
             onChangeText={setPhone}
             keyboardType="phone-pad"
             className="border border-gray-300 rounded-lg px-4 py-2 mb-3"
           />
           <TextInput
-            placeholder="Shipping Address"
+            placeholder={t('payment.shippingAddress')}
             value={address}
             onChangeText={setAddress}
             multiline
@@ -222,7 +216,9 @@ const Payment = () => {
         </View>
 
         <View className="mb-6">
-          <Text className="text-lg font-semibold mb-4">Payment Method</Text>
+          <Text className="text-lg font-semibold mb-4">
+            {t('payment.paymentMethod')}
+          </Text>
           <View className="flex-row items-center mb-3">
             <View className="rounded-full border-2 border-gray-100 mr-4">
               <RadioButton
@@ -231,7 +227,7 @@ const Payment = () => {
                 onPress={() => setPaymentMethod('cod')}
               />
             </View>
-            <Text>Cash on Delivery (COD)</Text>
+            <Text>{t('payment.cod')}</Text>
           </View>
           <View className="flex-row items-center">
             <View className="rounded-full border-2 border-gray-100 mr-4">
@@ -241,17 +237,17 @@ const Payment = () => {
                 onPress={() => setPaymentMethod('credit')}
               />
             </View>
-            <Text>Credit Card</Text>
+            <Text>{t('payment.creditCard')}</Text>
           </View>
         </View>
 
         {paymentMethod === 'credit' && (
           <View className="mb-6">
             <Text className="text-lg font-semibold mb-4">
-              Credit Card Details
+              {t('payment.creditDetails')}
             </Text>
             <TextInput
-              placeholder="Card Number"
+              placeholder={t('payment.cardNumber')}
               value={cardNumber}
               onChangeText={formatCardNumber}
               keyboardType="number-pad"
@@ -259,14 +255,19 @@ const Payment = () => {
               className="border border-gray-300 rounded-lg px-4 py-2 mb-3"
             />
             <TextInput
-              placeholder="Name on Card"
+              placeholder={
+                t('payment.nameOnCard') + ' (' + t('payment.optional') + ')'
+              }
               value={cardName}
-              onChangeText={setCardName}
+              onChangeText={(text) => {
+                const onlyLetters = text.replace(/[^a-zA-Z\s]/g, '');
+                setCardName(onlyLetters.toUpperCase());
+              }}
               className="border border-gray-300 rounded-lg px-4 py-2 mb-3"
             />
             <View className="flex-row justify-between">
               <TextInput
-                placeholder="MM/YY"
+                placeholder={t('payment.expiryDate')}
                 value={expiryDate}
                 onChangeText={formatExpiryDate}
                 keyboardType="number-pad"
@@ -274,7 +275,7 @@ const Payment = () => {
                 className="border border-gray-300 rounded-lg px-4 py-2 mb-3 w-[48%]"
               />
               <TextInput
-                placeholder="CVV"
+                placeholder={t('payment.cvv')}
                 value={cvv}
                 onChangeText={setCvv}
                 keyboardType="number-pad"
@@ -287,21 +288,23 @@ const Payment = () => {
         )}
 
         <View className="bg-gray-100 rounded-lg p-4">
-          <Text className="text-lg font-semibold mb-4">Order Summary</Text>
+          <Text className="text-lg font-semibold mb-4">
+            {t('payment.orderSummary')}
+          </Text>
           <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-600">Subtotal</Text>
+            <Text className="text-gray-600">{t('payment.subtotal')}</Text>
             <Text className="font-semibold">{formatPrice(subtotal)}</Text>
           </View>
           <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-600">Shipping Fee</Text>
+            <Text className="text-gray-600">{t('payment.shippingFee')}</Text>
             <Text className="font-semibold">{formatPrice(shippingFee)}</Text>
           </View>
           <View className="flex-row justify-between mb-2">
-            <Text className="text-gray-600">VAT (8%)</Text>
+            <Text className="text-gray-600">{t('payment.vat')}</Text>
             <Text className="font-semibold">{formatPrice(vatAmount)}</Text>
           </View>
           <View className="border-t border-gray-300 pt-2 mt-2 flex-row justify-between">
-            <Text className="text-lg font-bold">Total</Text>
+            <Text className="text-lg font-bold">{t('payment.total')}</Text>
             <Text className="text-lg font-bold text-red-500">
               {formatPrice(total)}
             </Text>
@@ -312,7 +315,9 @@ const Payment = () => {
           className="bg-black rounded-lg py-4 items-center mt-6"
           onPress={handlePlaceOrder}
         >
-          <Text className="text-white text-base font-bold">Place Order</Text>
+          <Text className="text-white text-base font-bold">
+            {t('payment.placeOrder')}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

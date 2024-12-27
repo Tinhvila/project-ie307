@@ -82,7 +82,16 @@ export default function BottomTabNavigationStack() {
               color={focused ? color : 'gray'}
             />
           ),
-          tabBarBadge: cartItems.length,
+          tabBarBadgeStyle: {
+            fontSize: 12,
+            top: -4,
+          },
+          tabBarBadge:
+            cartItems.length > 0
+              ? cartItems.length > 10
+                ? '10+'
+                : cartItems.length
+              : undefined,
           headerShown: false,
           headerTitleAlign: 'left',
         }}

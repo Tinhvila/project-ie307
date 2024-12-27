@@ -1,7 +1,18 @@
-import { View, Text, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Alert, ScrollView } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useTranslation } from 'react-i18next'
+import {
+  View,
+  Text,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+} from 'react-native';
+import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -11,7 +22,6 @@ import fetchProductData from '../api/fetchProductData';
 import { SearchStackNavigationProp } from '../types/navigation';
 import { SearchHistory } from '../types/types';
 import { useDebounce } from 'use-debounce';
-
 
 export default function Search() {
   const { t } = useTranslation();
@@ -26,8 +36,11 @@ export default function Search() {
   const [debouncedSearchText] = useDebounce(searchText, 500);
 
   const normalizeString = (str: string) => {
-    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  }
+    return str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  };
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -63,7 +76,9 @@ export default function Search() {
 
   React.useEffect(() => {
     const filterSearch = async () => {
-      const filteredSearchText = normalizeString(debouncedSearchText.toLowerCase());
+      const filteredSearchText = normalizeString(
+        debouncedSearchText.toLowerCase()
+      );
       const params = { filterTitle: filteredSearchText };
       const resultData = await fetchProductData(params);
       console.log(filteredSearchText);
@@ -78,8 +93,7 @@ export default function Search() {
           }
         });
         setSearchData(searchData ? searchData : []);
-      }
-      else {
+      } else {
         setSearchData([]);
       }
     };
@@ -89,7 +103,7 @@ export default function Search() {
     if (debouncedSearchText) {
       filterSearch();
     }
-  }, [debouncedSearchText]); // Runs whenever searchText changes
+  }, [debouncedSearchText]);
 
   // Handle the filter search
   const handleFilterSearch = async () => {
@@ -101,7 +115,9 @@ export default function Search() {
       const currentSearchHistory = userData[0].searchHistory || [];
 
       // Check if searchText exists in the titles of searchHistory using some()
-      const updatedSearchHistory = currentSearchHistory.some((entry) => entry.title === searchText)
+      const updatedSearchHistory = currentSearchHistory.some(
+        (entry) => entry.title === searchText
+      )
         ? currentSearchHistory
         : [...currentSearchHistory, { title: searchText }];
 
@@ -111,7 +127,7 @@ export default function Search() {
       });
       navigation.navigate('ItemsListScreen', { value: searchText });
     }
-  }
+  };
 
   // Handle the value search
   const handleValueSearch = async (value: string, id?: string) => {
@@ -133,70 +149,94 @@ export default function Search() {
       });
     }
     navigation.navigate('ItemsListScreen', { value, id });
-  }
+  };
 
   const handleDeleteHistory = async (value: string) => {
     const params = { id: userId };
 
     const userData = await fetchUser(params);
     if (userData && userData.length > 0) {
-      const updatedSearchHistory = userData[0].searchHistory?.filter((element) => element.title !== value);
+      const updatedSearchHistory = userData[0].searchHistory?.filter(
+        (element) => element.title !== value
+      );
       const result = await patchUser(String(userId), {
         searchHistory: updatedSearchHistory,
       });
     }
 
     await loadHistoryData();
-  }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className={'flex-1'}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        className={'flex-1'}
+      >
         <SafeAreaView>
           <View className={'bg-slate-200 justify-center py-5 px-3'}>
             <TextInput
               className={'border-gray-500 border-2 rounded-3xl pl-12 pr-4 py-2'}
-              placeholder='Search item, product, categories...'
+              placeholder={t('search.search-placeholder')}
               ref={textInputRef}
-              returnKeyType='search'
+              returnKeyType="search"
               onSubmitEditing={handleFilterSearch}
               enablesReturnKeyAutomatically
               value={searchText}
-              onChangeText={(text) => { setSearchText(text) }}
+              onChangeText={(text) => {
+                setSearchText(text);
+              }}
             />
-            <TouchableOpacity className={'absolute left-8'} onPress={handleFilterSearch}>
-              <AntDesignIcon name='search1' size={20} />
+            <TouchableOpacity
+              className={'absolute left-8'}
+              onPress={handleFilterSearch}
+            >
+              <AntDesignIcon name="search1" size={20} />
             </TouchableOpacity>
           </View>
           <ScrollView>
-            {historyData.slice(0, 20).slice().reverse().map((value, index) => (
-              <TouchableOpacity
-                onPress={() => handleValueSearch(value.title, value.id)}
-                key={index}
-                className={'flex-row items-center gap-3 p-5 border-b-black border-b'}
-              >
-                <MaterialIcons name={'history'} size={24} />
-                <Text className={'text-xl line-clamp-1 pr-5'}>{value.title}</Text>
+            {historyData
+              .slice(0, 20)
+              .slice()
+              .reverse()
+              .map((value, index) => (
                 <TouchableOpacity
-                  onPress={() => handleDeleteHistory(value.title)}
-                  className={'absolute right-0 bg-gray-100 p-2'}>
-                  <MaterialIcons name={'close'} size={24} />
+                  onPress={() => handleValueSearch(value.title, value.id)}
+                  key={index}
+                  className={
+                    'flex-row items-center gap-3 p-5 border-b-black border-b'
+                  }
+                >
+                  <MaterialIcons name={'history'} size={24} />
+                  <Text className={'text-xl line-clamp-1 pr-5'}>
+                    {value.title}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => handleDeleteHistory(value.title)}
+                    className={'absolute right-0 bg-gray-100 p-2'}
+                  >
+                    <MaterialIcons name={'close'} size={24} />
+                  </TouchableOpacity>
                 </TouchableOpacity>
-              </TouchableOpacity>
-            ))
-            }
-            {searchText !== '' && searchData.slice(0, 10).map((value, index) =>
-            (<TouchableOpacity
-              onPress={() => handleValueSearch(value.title, value.id)}
-              key={index}
-              className={'flex-row items-center gap-3 p-5 border-b-black border-b'}>
-              <MaterialIcons name={'search'} size={24} />
-              <Text className={'text-xl line-clamp-1 pr-5'}>{value.title}</Text>
-            </TouchableOpacity>))
-            }
+              ))}
+            {searchText !== '' &&
+              searchData.slice(0, 10).map((value, index) => (
+                <TouchableOpacity
+                  onPress={() => handleValueSearch(value.title, value.id)}
+                  key={index}
+                  className={
+                    'flex-row items-center gap-3 p-5 border-b-black border-b'
+                  }
+                >
+                  <MaterialIcons name={'search'} size={24} />
+                  <Text className={'text-xl line-clamp-1 pr-5'}>
+                    {value.title}
+                  </Text>
+                </TouchableOpacity>
+              ))}
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>
-    </TouchableWithoutFeedback >
-  )
+    </TouchableWithoutFeedback>
+  );
 }

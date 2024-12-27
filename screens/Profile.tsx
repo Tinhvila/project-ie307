@@ -21,7 +21,6 @@ export default function Profile() {
     setLanguage(newLanguage === 'en' ? 'English' : 'Vietnamese');
   };
 
-
   const handleLogout = () => {
     setId('');
     setIsAuthenticated(false);
@@ -65,21 +64,24 @@ export default function Profile() {
           </Text>
         </View>
       </View>
-      <View className={'flex justify-around items-center flex-row mt-1'}>
+      <View className={'flex justify-around items-start flex-row mt-1'}>
         <View className={'w-[50%]'}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Order')}
+            onPress={() => navigation.navigate('Favorite')}
             className={'justify-center items-center bg-gray-300 p-5 m-1'}
           >
-            <AntDesignIcon name="tagso" size={32} />
-            <Text className={'mt-1 text-lg'}>{t('profile.order-title')}</Text>
+            {/* tagso */}
+            <AntDesignIcon name="heart" size={32} />
+            <Text className={'mt-1 text-lg'}>{t('profile.favorite')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={changeLanguage}
             className={'justify-center items-center bg-gray-300 p-5 m-1'}
           >
             <IoniconsIcon name="language" size={32} />
-            <Text className={'mt-1 text-lg'}>{t('profile.change-language')}</Text>
+            <Text className={'mt-1 text-lg'}>
+              {t('profile.change-language')}
+            </Text>
           </TouchableOpacity>
         </View>
         <View className={'w-[50%]'}>

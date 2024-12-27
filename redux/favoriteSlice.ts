@@ -37,7 +37,7 @@ export const addToFavorites = createAsyncThunk(
   ) => {
     try {
       const userResponse = await axios.get(`${apiBaseUrl}/${id}`);
-      const currentFavorites = userResponse.data.favorites || [];
+      const currentFavorites = userResponse.data.favorite || [];
 
       const existingItem = currentFavorites.find(
         (favItem: FavoriteItem) => favItem.id === item.id
@@ -50,10 +50,10 @@ export const addToFavorites = createAsyncThunk(
       const updatedFavorites = [...currentFavorites, item];
 
       const response = await axios.patch(`${apiBaseUrl}/${id}`, {
-        favorites: updatedFavorites,
+        favorite: updatedFavorites,
       });
 
-      return response.data.favorites;
+      return response.data.favorite;
     } catch (error) {
       return rejectWithValue('Không thể thêm vào danh sách yêu thích');
     }
@@ -68,16 +68,16 @@ export const removeFromFavorites = createAsyncThunk(
   ) => {
     try {
       const userResponse = await axios.get(`${apiBaseUrl}/${id}`);
-      const currentFavorites = userResponse.data.favorites;
+      const currentFavorites = userResponse.data.favorite;
 
       const updatedFavorites = currentFavorites.filter(
         (item: FavoriteItem) => item.id !== itemId
       );
 
       const response = await axios.patch(`${apiBaseUrl}/${id}`, {
-        favorites: updatedFavorites,
+        favorite: updatedFavorites,
       });
-      return response.data.favorites;
+      return response.data.favorite;
     } catch (error) {
       return rejectWithValue('Không thể xóa khỏi danh sách yêu thích');
     }
@@ -89,9 +89,9 @@ export const clearFavorites = createAsyncThunk(
   async (id: string, { rejectWithValue }) => {
     try {
       const response = await axios.patch(`${apiBaseUrl}/${id}`, {
-        favorites: [],
+        favorite: [],
       });
-      return response.data.favorites;
+      return response.data.favorite;
     } catch (error) {
       return rejectWithValue('Không thể xóa danh sách yêu thích');
     }

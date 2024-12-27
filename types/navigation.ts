@@ -41,6 +41,7 @@ export type ProfileStackNavigationParamList = {
   Profile: undefined;
   Order: undefined;
   EditProfile: undefined;
+  Favorite: undefined;
   ChangePassword: undefined;
 };
 
