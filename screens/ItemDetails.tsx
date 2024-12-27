@@ -50,7 +50,7 @@ export default function ItemDetails({
     }
   };
 
-  function handleBuyNow() {}
+  function handleBuyNow() { }
 
   // Navigation Icon dominant color
 
@@ -90,9 +90,8 @@ export default function ItemDetails({
         </View>
         <View className={'flex flex-row items-center'}>
           <Text
-            className={`font-bold text-2xl ${
-              discountPrice ? 'text-green-600' : 'text-black'
-            }`}
+            className={`font-bold text-2xl ${discountPrice ? 'text-green-600' : 'text-black'
+              }`}
           >
             {discountPrice
               ? formatPrice(discountPrice)
@@ -112,40 +111,6 @@ export default function ItemDetails({
             </>
           )}
         </View>
-        <View className={'flex flex-row items-center justify-between my-5'}>
-          <View className={'flex flex-row'}>
-            <StarList rating={rating ? rating : 0} />
-            <Text className={'ml-3 text-gray-700 text-lg'}>
-              ({rating ? rating.toFixed(1) : 0})
-            </Text>
-          </View>
-          <View className={'flex-row items-center justify-center'}>
-            <TouchableOpacity
-              onPress={() =>
-                setCountItem((prev) => (prev === 1 ? prev : prev - 1))
-              }
-              onPressIn={() => startCountItemInterval('decrease')}
-              onPressOut={stopCountItemInterval}
-              disabled={countItem <= 1 ? true : false}
-            >
-              <FontAwesomeIcon
-                name="minus"
-                size={24}
-                color={countItem === 1 ? 'gray' : 'black'}
-              />
-            </TouchableOpacity>
-            <Text className={'mx-5 px-5 py-1 border-2 rounded-md text-center'}>
-              {countItem}
-            </Text>
-            <TouchableOpacity
-              onPress={() => setCountItem((prev) => prev + 1)}
-              onPressIn={() => startCountItemInterval('increase')}
-              onPressOut={stopCountItemInterval}
-            >
-              <FontAwesomeIcon name="plus" size={24} />
-            </TouchableOpacity>
-          </View>
-        </View>
         <TouchableOpacity
           onPress={handleBuyNow}
           className={
@@ -162,22 +127,6 @@ export default function ItemDetails({
             {t('item_detail.description')}
           </Text>
           <Text className={'text-justify'}>{description}</Text>
-        </View>
-        <View
-          className={
-            'flex flex-row items-center justify-between bg-blue-200 p-3 my-3 rounded-sm'
-          }
-        >
-          <View className={'flex-row justifiy-center items-center'}>
-            <FontAwesome5Icon name="location-arrow" size={24} />
-            <Text className={'ml-1'}>Deliver to</Text>
-          </View>
-          <View className={'flex-row justifiy-center items-center'}>
-            <FontAwesome5Icon name="truck" size={24} />
-            <Text className={'ml-1'}>
-              {t('item_detail.delivery_option.free_delivery')}
-            </Text>
-          </View>
         </View>
       </View>
     </ScrollView>

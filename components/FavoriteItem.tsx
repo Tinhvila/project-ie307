@@ -11,12 +11,15 @@ import { useTranslation } from 'react-i18next';
 import { useToast } from '../components/toastContext';
 import { addToCart, removeFromCart } from '../redux/cartSlice';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import fetchProductData from '../api/fetchProductData';
 
 interface Props {
   product: FavoriteItemType;
 }
 
 export default function FavoriteItem({ product }: Props) {
+  const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -46,49 +49,60 @@ export default function FavoriteItem({ product }: Props) {
     }, 0);
   };
 
-  return (
-    <View className="bg-white rounded-md shadow-sm m-2 p-4">
-      <View className="flex-row">
-        <View className="w-1/3 mr-4">
-          <Image
-            source={{ uri: product.image }}
-            className="w-full aspect-square rounded-sm"
-            resizeMode="cover"
-          />
-        </View>
+  const handleCheckCart = async () => {
+    const params = { filterId: product.id };
+    const dataProduct = await fetchProductData(params);
+    if (dataProduct && dataProduct.data.length > 0) {
+      const dataParams = dataProduct.data[0];
+      navigation.navigate('ItemDetails', { ...dataParams });
+    }
+  }
 
-        <View className="flex-1">
-          <View className="flex-row justify-between items-start mb-2">
-            <Text className="flex-1 pr-4 text-base font-bold line-clamp-2">
-              {product.name}
-            </Text>
-            <TouchableOpacity onPress={handleRemoveItem}>
-              <Icon name="close" size={24} color="gray" />
+  return (
+    <TouchableOpacity onPress={handleCheckCart}>
+      <View className="bg-white rounded-md shadow-sm m-2 p-4">
+        <View className="flex-row">
+          <View className="w-1/3 mr-4">
+            <Image
+              source={{ uri: product.image }}
+              className="w-full aspect-square rounded-sm"
+              resizeMode="cover"
+            />
+          </View>
+
+          <View className="flex-1">
+            <View className="flex-row justify-between items-start mb-2">
+              <Text className="flex-1 pr-4 text-base font-bold line-clamp-2">
+                {product.name}
+              </Text>
+              <TouchableOpacity onPress={handleRemoveItem}>
+                <Icon name="close" size={24} color="gray" />
+              </TouchableOpacity>
+            </View>
+
+            <View className="flex-row justify-between items-center mb-2">
+              <View>
+                {product.price ? (
+                  <Text className="font-bold text-red-500">
+                    {formatPrice(product.price)}
+                  </Text>
+                ) : null}
+              </View>
+            </View>
+
+            <TouchableOpacity
+              onPress={!isInCart ? handleAddToCart : handleRemoveFromCart}
+              className="bg-black rounded-md py-2 px-4 mt-2"
+            >
+              <Text className="text-white text-center font-medium">
+                {!isInCart
+                  ? t('favorites.add-to-cart')
+                  : t('favorites.remove-from-cart')}
+              </Text>
             </TouchableOpacity>
           </View>
-
-          <View className="flex-row justify-between items-center mb-2">
-            <View>
-              {product.price ? (
-                <Text className="font-bold text-red-500">
-                  {formatPrice(product.price)}
-                </Text>
-              ) : null}
-            </View>
-          </View>
-
-          <TouchableOpacity
-            onPress={!isInCart ? handleAddToCart : handleRemoveFromCart}
-            className="bg-black rounded-md py-2 px-4 mt-2"
-          >
-            <Text className="text-white text-center font-medium">
-              {!isInCart
-                ? t('favorites.add-to-cart')
-                : t('favorites.remove-from-cart')}
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
